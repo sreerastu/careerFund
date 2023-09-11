@@ -1,0 +1,39 @@
+#server port
+server:
+  port: 31000
+
+
+#smtp configuration and database configuration
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/Foundation
+    username: postgres
+    password: root
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+
+#eureka configuration
+eureka:
+  instance:
+    hostname: postgresdb.cu0ghcs3xhjo.us-east-1.rds.amazonaws.com
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    serviceUrl:
+      defaultZone: http://postgresdb.cu0ghcs3xhjo.us-east-1.rds.amazonaws.com:5432/eureka/
+
+
+
+#Swagger
+spring-doc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+
+
+
+
