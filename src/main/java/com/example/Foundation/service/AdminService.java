@@ -22,4 +22,6 @@ public interface AdminService {
 
     Admin login(String emailAddress, String password) ;
 
+    Admin getAminByMail(String emailAddress);
+
 }

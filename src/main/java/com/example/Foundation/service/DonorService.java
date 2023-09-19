@@ -21,4 +21,5 @@ public interface DonorService {
     String deleteDonorById(int donorId) throws DonorNotFoundException;
 
     Donor login(String emailAddress, String password);
+    Donor getDonorByEmail(String emailAddress);
 }

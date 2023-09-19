@@ -20,4 +20,5 @@ public interface StudentService {
     String deleteStudentById(int studentId) throws StudentNotFoundException;
 
     Student login(String emailAddress, String password);
+    Student getStdByEmail(String emailAddress);
 }

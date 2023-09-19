@@ -65,6 +65,11 @@ public class StudentServiceImpl implements StudentService{
         return studentRepository.findByEmailAddressAndPassword(emailAddress,password);
     }
 
+    @Override
+    public Student getStdByEmail(String emailAddress) {
+        return studentRepository.findByEmailAddress(emailAddress);
+    }
+
     public void assignStudentToTrainer(int trainerId, int studentId) throws TrainerNotFoundException {
         Trainer trainer = trainerRepository.findById(trainerId).orElseThrow(()->new TrainerNotFoundException("trainer not found with Id" +":" + trainerId));
         Student student = studentRepository.findById(studentId).orElseThrow(()->new TrainerNotFoundException("student not found with Id" +":" + studentId));

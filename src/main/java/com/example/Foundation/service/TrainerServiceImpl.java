@@ -65,4 +65,9 @@ public class TrainerServiceImpl implements TrainerService {
     public Trainer login(String emailAddress, String password) {
         return trainerRepository.findByEmailAddressAndPassword(emailAddress,password);
     }
+
+    @Override
+    public Trainer getTrainerByEmail(String emailAddress) {
+        return trainerRepository.findByEmailAddress(emailAddress);
+    }
 }

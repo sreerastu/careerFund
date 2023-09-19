@@ -6,19 +6,18 @@ import com.example.Foundation.modal.Admin;
 import com.example.Foundation.modal.Donor;
 import com.example.Foundation.modal.Student;
 import com.example.Foundation.modal.Trainer;
-import com.example.Foundation.service.AdminServiceImpl;
-import com.example.Foundation.service.DonorServiceImpl;
-import com.example.Foundation.service.StudentServiceImpl;
-import com.example.Foundation.service.TrainerServiceImpl;
+import com.example.Foundation.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api")
 public class AuthenticationController {
+
+    @Autowired
+    private EmailService emailService;
 
     private final StudentServiceImpl studentService;
     private final AdminServiceImpl adminService;
@@ -53,6 +52,14 @@ public class AuthenticationController {
         } else {
             throw new AuthenticationException("Invalid Credentials");
         }
+
+    }
+    @PostMapping("/reset/{emailAddress}")
+    public ResponseEntity<?> resetPassword(@PathVariable String emailAddress) throws Exception {
+
+        emailService.sendEmail(emailAddress);
+
+        return ResponseEntity.status(HttpStatus.OK).body("Mail Sent Successfully......!");
 
     }
 

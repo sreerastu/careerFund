@@ -19,4 +19,6 @@ public interface TrainerService {
 
     Trainer login(String emailAddress, String password);
 
+    Trainer getTrainerByEmail(String emailAddress);
+
 }
