@@ -2,6 +2,7 @@ package com.example.Foundation.modal;
 
 import com.example.Foundation.Enum.Course;
 import com.example.Foundation.Enum.Gender;
+import com.example.Foundation.Enum.UserType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,10 +25,19 @@ public class Trainer {
     protected String contactNumber;
     @Column(nullable = false)
     protected String password;
-    @Column(nullable = false,unique = true)
+    @Column(nullable = false, unique = true)
     protected String emailAddress;
     @Enumerated(EnumType.STRING)
     private Gender gender;
     @Enumerated(EnumType.STRING)
     private Course course;
+
+    @Enumerated(EnumType.STRING)
+    private UserType userType;
+
+
+    @ManyToOne
+    @JoinColumn(name = "student_id")
+    private Student student;
+
 }

@@ -2,6 +2,7 @@ package com.example.Foundation.modal;
 
 
 import com.example.Foundation.Enum.Gender;
+import com.example.Foundation.Enum.UserType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,7 +20,7 @@ public class Donor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected int helperId;
+    protected int donorId;
     protected String firstName;
     protected String lastName;
     protected String contactNumber;
@@ -29,6 +30,9 @@ public class Donor {
     protected String emailAddress;
     @Enumerated(EnumType.STRING)
     private Gender gender;
+
+    @Enumerated(EnumType.STRING)
+    private UserType userType;
 
 
 

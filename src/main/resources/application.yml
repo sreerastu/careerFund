@@ -1,6 +1,6 @@
 #server port
 server:
-  port: 31000
+  port: 31100
 
 
 #smtp configuration and database configuration
@@ -29,7 +29,7 @@ eureka:
 
 
 #Swagger
-spring-doc:
+springdoc:
   swagger-ui:
     path: /swagger-ui.html
 
