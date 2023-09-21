@@ -3,11 +3,15 @@ package com.example.Foundation.modal;
 
 import com.example.Foundation.Enum.Gender;
 import com.example.Foundation.Enum.UserType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -26,7 +30,7 @@ public class Donor {
     protected String contactNumber;
     @Column(nullable = false)
     protected String password;
-    @Column(nullable = false,unique = true)
+    @Column(nullable = false, unique = true)
     protected String emailAddress;
     @Enumerated(EnumType.STRING)
     private Gender gender;
@@ -34,6 +38,11 @@ public class Donor {
     @Enumerated(EnumType.STRING)
     private UserType userType;
 
+
+    @OneToMany(mappedBy = "donor", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    //  @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @JsonIgnore
+    private List<Payment> payments = new ArrayList<>();
 
 
 }

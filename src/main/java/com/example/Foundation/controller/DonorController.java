@@ -39,8 +39,8 @@ public class DonorController {
     }
 
     @GetMapping("/donor/{donorId}")
-    public ResponseEntity<?> getDonorById(@PathVariable int id) throws InvalidDonorIdException {
-        Donor donor = donorService.getDonorById(id);
+    public ResponseEntity<?> getDonorById(@PathVariable int donorId) throws InvalidDonorIdException {
+        Donor donor = donorService.getDonorById(donorId);
         return ResponseEntity.status(HttpStatus.OK).body(donor);
     }
 

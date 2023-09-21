@@ -10,6 +10,6 @@ public interface TrainerRepository extends JpaRepository<Trainer, Integer> {
 
     Trainer findByEmailAddressAndPassword(String emailAddress, String password);
 
-        Trainer findByEmailAddress(String emailAddress);
+    Trainer findByEmailAddress(String emailAddress);
 
 }

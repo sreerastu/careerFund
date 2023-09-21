@@ -5,7 +5,6 @@ import com.example.Foundation.exception.StudentNotFoundException;
 import com.example.Foundation.exception.TrainerNotFoundException;
 import com.example.Foundation.modal.Student;
 import com.example.Foundation.service.StudentServiceImpl;
-import com.example.Foundation.service.TrainerServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +17,8 @@ import java.util.List;
 public class StudentController {
 
 
-@Autowired
-private StudentServiceImpl studentService;
+    @Autowired
+    private StudentServiceImpl studentService;
 
 
     @PostMapping("/student")
