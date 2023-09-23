@@ -1,9 +1,6 @@
 package com.example.Foundation.repositories;
 
-import com.example.Foundation.dto.PaymentDTO;
 import com.example.Foundation.modal.Payment;
-import jakarta.persistence.NamedNativeQuery;
-import jakarta.persistence.SqlResultSetMapping;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

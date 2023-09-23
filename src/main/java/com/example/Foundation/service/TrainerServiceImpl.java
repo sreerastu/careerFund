@@ -5,13 +5,15 @@ import com.example.Foundation.exception.TrainerNotFoundException;
 import com.example.Foundation.modal.Trainer;
 import com.example.Foundation.repositories.TrainerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
 
 import java.util.List;
 
 @Service
-public class TrainerServiceImpl implements TrainerService {
+public class TrainerServiceImpl implements TrainerService, UserDetailsService {
 
 
     @Autowired
@@ -63,11 +65,21 @@ public class TrainerServiceImpl implements TrainerService {
 
     @Override
     public Trainer login(String emailAddress, String password) {
-        return trainerRepository.findByEmailAddressAndPassword(emailAddress,password);
+        return trainerRepository.findByEmailAddressAndPassword(emailAddress, password);
     }
 
     @Override
     public Trainer getTrainerByEmail(String emailAddress) {
         return trainerRepository.findByEmailAddress(emailAddress);
     }
+
+    @Override
+    public UserDetails loadUserByUsername(String emailAddress) throws UsernameNotFoundException {
+        Trainer trainer = trainerRepository.findByEmailAddress(emailAddress);
+        if (trainer == null) {
+            throw new UsernameNotFoundException("trainer not found with email address: " + emailAddress);
+        }
+        return new org.springframework.security.core.userdetails.User(trainer.getEmailAddress(), trainer.getPassword(), trainer.getAuthorities());
+    }
 }
+

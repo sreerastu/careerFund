@@ -1,6 +1,5 @@
 package com.example.Foundation.service;
 
-import com.example.Foundation.dto.PaymentDTO;
 import com.example.Foundation.exception.InvalidDonorIdException;
 import com.example.Foundation.modal.Donor;
 import com.example.Foundation.modal.Payment;

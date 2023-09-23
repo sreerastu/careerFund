@@ -5,11 +5,20 @@ import com.example.Foundation.Enum.Gender;
 
 
 import com.example.Foundation.Enum.UserType;
-import jakarta.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import javax.persistence.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Data
@@ -18,7 +27,7 @@ import lombok.ToString;
 @Entity
 @ToString
 @Table(name = "ADMIN_TBL")
-public class Admin {
+public class Admin implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,6 +45,42 @@ public class Admin {
     private UserType userType;
 
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        Set<GrantedAuthority> authorities = new HashSet<>();
 
+        authorities.add(new SimpleGrantedAuthority(userType.name()));
 
+        return authorities;
+    }
+
+    @Override
+    @JsonIgnore
+    public String getUsername() {
+        return this.getEmailAddress();
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean isEnabled() {
+        return true;
+    }
 }

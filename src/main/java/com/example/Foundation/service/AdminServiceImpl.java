@@ -5,12 +5,15 @@ import com.example.Foundation.exception.InvalidAdminIdException;
 import com.example.Foundation.modal.Admin;
 import com.example.Foundation.repositories.AdminRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class AdminServiceImpl implements AdminService {
+public class AdminServiceImpl implements AdminService, UserDetailsService {
 
     @Autowired
     private AdminRepository adminRepository;
@@ -61,6 +64,15 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public Admin getAminByMail(String emailAddress) {
         return adminRepository.findByEmailAddress(emailAddress);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String emailAddress) throws UsernameNotFoundException {
+        Admin admin = adminRepository.findByEmailAddress(emailAddress);
+        if (admin == null) {
+            throw new UsernameNotFoundException("Admin not found with email address: " + emailAddress);
+        }
+        return new org.springframework.security.core.userdetails.User(admin.getEmailAddress(), admin.getPassword(), admin.getAuthorities());
     }
 
 }

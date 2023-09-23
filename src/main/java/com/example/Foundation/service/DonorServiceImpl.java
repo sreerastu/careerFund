@@ -5,12 +5,15 @@ import com.example.Foundation.exception.InvalidDonorIdException;
 import com.example.Foundation.modal.Donor;
 import com.example.Foundation.repositories.DonorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class DonorServiceImpl implements DonorService{
+public class DonorServiceImpl implements DonorService, UserDetailsService {
 
     @Autowired
     private DonorRepository donorRepository;
@@ -42,7 +45,7 @@ public class DonorServiceImpl implements DonorService{
 
     @Override
     public Donor getDonorById(int donorId) throws InvalidDonorIdException {
-        return donorRepository.findById(donorId).orElseThrow(()-> new InvalidDonorIdException("Invalid donorId" + donorId));
+        return donorRepository.findById(donorId).orElseThrow(() -> new InvalidDonorIdException("Invalid donorId" + donorId));
     }
 
     @Override
@@ -59,11 +62,21 @@ public class DonorServiceImpl implements DonorService{
 
     @Override
     public Donor login(String emailAddress, String password) {
-        return donorRepository.findByEmailAddressAndPassword(emailAddress,password);
+        return donorRepository.findByEmailAddressAndPassword(emailAddress, password);
     }
 
     @Override
     public Donor getDonorByEmail(String emailAddress) {
         return donorRepository.findByEmailAddress(emailAddress);
     }
+
+    @Override
+    public UserDetails loadUserByUsername(String emailAddress) throws UsernameNotFoundException {
+        Donor donor = donorRepository.findByEmailAddress(emailAddress);
+        if (donor == null) {
+            throw new UsernameNotFoundException("Donor not found with email address: " + emailAddress);
+        }
+        return new org.springframework.security.core.userdetails.User(donor.getEmailAddress(), donor.getPassword(), donor.getAuthorities());
+    }
 }
+
