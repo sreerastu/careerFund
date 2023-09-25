@@ -56,10 +56,15 @@ public class PaymentController {
         }
     }
 
-
     @GetMapping("/payments")
     public ResponseEntity<?> getAllPayments() {
         List<Payment> payments = paymentService.getAllPayments();
         return ResponseEntity.status(HttpStatus.OK).body(payments);
     }
+    @GetMapping("/topPayments")
+    public ResponseEntity<?> getAllTopPayments() {
+        List<Payment> payments = paymentService.getAllTopPayments();
+        return ResponseEntity.status(HttpStatus.OK).body(payments);
+    }
+
 }
