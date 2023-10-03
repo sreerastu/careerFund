@@ -6,9 +6,12 @@ server:
 #smtp configuration and database configuration
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/Foundation
-    username: postgres
-    password: root
+    #    url: jdbc:postgresql://localhost:5432/Foundation
+    url: jdbc:postgresql://careerfund.postgres.database.azure.com:5432/careerfundazure
+    #    username: postgres
+    username: azurepostgres@careerfund
+    password: Azure@123
+  # password: root
   jpa:
     properties:
       hibernate:
@@ -17,7 +20,7 @@ spring:
       ddl-auto: update
 
 
-#  gmail smtp configurations
+  #  gmail smtp configurations
   mail:
     host: smtp.gmail.com
     port: 587

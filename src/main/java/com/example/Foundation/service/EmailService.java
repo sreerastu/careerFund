@@ -53,7 +53,7 @@ public class EmailService {
         MimeMessageHelper helper = new MimeMessageHelper(message);
         helper.setSubject("Password Reset");
         String randomPwd = sendTempPassword();
-        helper.setText("Your temporary new password is " + randomPwd + ",Please change your password at application");
+        helper.setText("Your temporary new password is " + randomPwd + ",Please change your password at profile");
         helper.setFrom(sender);
         helper.setTo(emailAddress);
 
