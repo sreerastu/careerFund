@@ -94,6 +94,15 @@ public class AuthenticationController {
 
     }
 
+    @PostMapping("/verification/{emailAddress}/{code}")
+    public ResponseEntity<?> verification(@PathVariable String emailAddress,@PathVariable String code) throws Exception {
+
+        emailService.verifyEmail(emailAddress,code);
+
+        return ResponseEntity.status(HttpStatus.OK).body("Mail Sent Successfully......!");
+
+    }
+
 
 }
 

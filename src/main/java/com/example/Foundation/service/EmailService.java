@@ -82,6 +82,25 @@ public class EmailService {
         log.info("Mail Sent Successfully......");
         return "Mail Sent Successfully......!";
     }
+    public String verifyEmail(String emailAddress,String code) throws javax.mail.MessagingException {
+
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message);
+        helper.setSubject("Email Verification");
+        String randomPwd = sendTempPassword();
+        helper.setText("Your Verification Code is " + randomPwd + ",Please use the code  for mail verification");
+        helper.setFrom(sender);
+        helper.setTo(emailAddress);
+        javaMailSender.send(message);
+
+        if(randomPwd == code) {
+
+            log.info("Mail Sent Successfully......");
+            return "Mail Sent Successfully......!";
+        }
+        return "";
+
+    }
 
     public String sendTempPassword() {
 
@@ -90,4 +109,5 @@ public class EmailService {
         log.info(pwd);
         return pwd;
     }
+
 }
