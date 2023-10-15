@@ -19,7 +19,7 @@ public class DonorController {
     @Autowired
     private DonorServiceImpl donorService;
 
-    @PostMapping("/donor")
+    @PostMapping("/register/donor")
     public ResponseEntity<?> createDonor(@RequestBody Donor donor) {
 
         Donor createdDonor = donorService.createDonor(donor);

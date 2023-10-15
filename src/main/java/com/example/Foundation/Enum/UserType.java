@@ -5,5 +5,6 @@ public enum UserType {
     STUDENT,
     DONOR,
     ADMIN,
-    TRAINER
+    TRAINER,
+    UNKNOWN
 }

@@ -12,6 +12,8 @@ import com.example.Foundation.repositories.AdminRepository;
 import com.example.Foundation.repositories.DonorRepository;
 import com.example.Foundation.repositories.StudentRepository;
 import com.example.Foundation.repositories.TrainerRepository;
+import com.example.Foundation.util.JwtUtil;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -34,6 +36,9 @@ public class StudentServiceImpl implements StudentService, UserDetailsService {
 
     @Autowired
     private DonorRepository donorRepository;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     @Override
     public Student createStudent(Student student) {
@@ -130,5 +135,29 @@ public class StudentServiceImpl implements StudentService, UserDetailsService {
         } else {
             return student.getUserType();
         }
+    }
+
+    public UserType determineUserTypeBasedOnToken(String token) {
+        if (token != null) {
+            // Decode the token and extract relevant claims
+            Claims claims = jwtUtil.extractAllClaims(token);
+
+            if (claims != null) {
+                // Check a claim in the JWT to determine the user type
+                String userTypeClaim = claims.get("userType", String.class);
+
+                if (userTypeClaim != null) {
+                    // Convert the claim value to a UserType enum
+                    try {
+                        return UserType.valueOf(userTypeClaim.toUpperCase());
+                    } catch (IllegalArgumentException e) {
+                        // Handle invalid or unknown user types
+                    }
+                }
+            }
+        }
+
+        // Return a default user type or handle cases where the user type can't be determined
+        return UserType.UNKNOWN;
     }
 }

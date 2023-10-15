@@ -6,12 +6,12 @@ server:
 #smtp configuration and database configuration
 spring:
   datasource:
-    #    url: jdbc:postgresql://localhost:5432/Foundation
-    url: jdbc:postgresql://careerfund.postgres.database.azure.com:5432/careerfundazure
-    #    username: postgres
-    username: azurepostgres@careerfund
-    password: Azure@123
-  # password: root
+    url: jdbc:postgresql://localhost:5432/Foundation
+    #    url: jdbc:postgresql://careerfund.postgres.database.azure.com:5432/careerfundAzure
+    username: postgres
+    #    username: careerfund@careerfund
+    #    password: Azure@123
+    password: root
   jpa:
     properties:
       hibernate:

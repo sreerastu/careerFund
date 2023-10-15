@@ -1,5 +1,6 @@
 package com.example.Foundation.util;
 
+import com.example.Foundation.Enum.UserType;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -16,6 +17,9 @@ public class JwtUtil {
 
     private String SECRET_KEY = "2D4A614E645267556B58703273357538782F413F4428472B4B6250655368566D";
 
+    private static final String CLAIM_KEY_USER_TYPE = "userType";
+
+
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
@@ -29,7 +33,7 @@ public class JwtUtil {
         return claimsResolver.apply(claims);
     }
 
-    private Claims extractAllClaims(String token) {
+    public Claims extractAllClaims(String token) {
         return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
     }
 
@@ -37,14 +41,14 @@ public class JwtUtil {
         return extractExpiration(token).before(new Date());
     }
 
-    public String generateToken(String emailAddress, String userType) {
+    public String generateToken(String emailAddress,UserType userType) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("userType", userType);
+        claims.put(CLAIM_KEY_USER_TYPE, userType.toString());
         return createToken(claims, emailAddress);
     }
 
-    private String createToken(Map<String, Object> claims, String subject) {
-        return Jwts.builder().setClaims(claims).setSubject(subject)
+    private String createToken(Map<String, Object> claims, String userName) {
+        return Jwts.builder().setClaims(claims).setSubject(userName)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();

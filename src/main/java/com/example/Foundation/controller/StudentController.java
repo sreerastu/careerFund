@@ -21,7 +21,7 @@ public class StudentController {
     private StudentServiceImpl studentService;
 
 
-    @PostMapping("/student")
+    @PostMapping("/register/student")
     public ResponseEntity<?> createStudent(@RequestBody Student student) {
 
         Student createdStudent = studentService.createStudent(student);

@@ -19,7 +19,7 @@ public class TrainerController {
     private TrainerServiceImpl trainerService;
 
 
-    @PostMapping("/trainer")
+    @PostMapping("/register/trainer")
     public ResponseEntity<?> createTrainer(@RequestBody Trainer trainer) {
 
         Trainer createdTrainer = trainerService.createTrainer(trainer);

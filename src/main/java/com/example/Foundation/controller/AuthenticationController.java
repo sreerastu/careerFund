@@ -1,5 +1,7 @@
 package com.example.Foundation.controller;
 
+import com.example.Foundation.Enum.UserType;
+import com.example.Foundation.dto.JwtResponse;
 import com.example.Foundation.dto.LoginApiDto;
 import com.example.Foundation.exception.AuthenticationException;
 import com.example.Foundation.service.*;
@@ -55,35 +57,14 @@ public class AuthenticationController {
             }
 
             // Generate a JWT token with the determined user type
-            String token = jwtUtil.generateToken(loginCredentials.getEmailAddress(), userType);
+            String token = jwtUtil.generateToken(loginCredentials.getEmailAddress(), UserType.valueOf(userType));
 
-            return ResponseEntity.ok(token);
+            return ResponseEntity.ok(new JwtResponse(token));
         } catch (Exception ex) {
             ex.printStackTrace();
             throw new AuthenticationException("Invalid details provided");
         }
     }
-/*    @PostMapping("/login")
-    public String login(@RequestBody LoginApiDto loginRequest) throws AuthenticationException {
-
-        Student student = studentService.login(loginRequest.getEmailAddress(), loginRequest.getPassword());
-        Admin admin = adminService.login(loginRequest.getEmailAddress(), loginRequest.getPassword());
-        Trainer trainer = trainerService.login(loginRequest.getEmailAddress(), loginRequest.getPassword());
-        Donor donor = donorService.login(loginRequest.getEmailAddress(), loginRequest.getPassword());
-
-        if (student != null) {
-            return "student login successfully";
-        } else if (admin != null) {
-            return "admin login successfully";
-        } else if (trainer != null) {
-            return "trainer login successfully";
-        } else if (donor != null) {
-            return "donor login successfully";
-        } else {
-            throw new AuthenticationException("Invalid Credentials");
-        }
-
-    }*/
 
     @PostMapping("/reset/{emailAddress}")
     public ResponseEntity<?> resetPassword(@PathVariable String emailAddress) throws Exception {
