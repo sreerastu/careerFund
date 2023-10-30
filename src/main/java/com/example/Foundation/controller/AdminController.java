@@ -8,6 +8,7 @@ import com.example.Foundation.service.AdminServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,8 +20,12 @@ public class AdminController {
     @Autowired
     private AdminServiceImpl adminService;
 
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
     @PostMapping("/register/admin")
     public ResponseEntity<?> createAdmin(@RequestBody Admin admin) {
+        admin.setPassword(this.bCryptPasswordEncoder.encode(admin.getPassword()));
 
         Admin createdAdmin = adminService.createAdmin(admin);
         return ResponseEntity.status(HttpStatus.OK).body(createdAdmin);

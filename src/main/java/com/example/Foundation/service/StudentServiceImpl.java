@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,6 +41,9 @@ public class StudentServiceImpl implements StudentService, UserDetailsService {
     @Autowired
     private JwtUtil jwtUtil;
 
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
     @Override
     public Student createStudent(Student student) {
         return studentRepository.save(student);
@@ -52,7 +56,7 @@ public class StudentServiceImpl implements StudentService, UserDetailsService {
         existingStudent.setLastName(student.getLastName());
         existingStudent.setGender(student.getGender());
         existingStudent.setEmailAddress(student.getEmailAddress());
-        existingStudent.setPassword(student.getPassword());
+        existingStudent.setPassword(this.bCryptPasswordEncoder.encode(student.getPassword()));
         existingStudent.setContactNumber(student.getContactNumber());
 
         return existingStudent;

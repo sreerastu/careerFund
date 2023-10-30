@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +18,9 @@ public class AdminServiceImpl implements AdminService, UserDetailsService {
 
     @Autowired
     private AdminRepository adminRepository;
+
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
     @Override
@@ -33,6 +37,7 @@ public class AdminServiceImpl implements AdminService, UserDetailsService {
         existingAdmin.setContactNumber(admin.getContactNumber());
         //existingAdmin.setDob(admin.getDob());
         existingAdmin.setEmailAddress(admin.getEmailAddress());
+        existingAdmin.setPassword(this.bCryptPasswordEncoder.encode(admin.getPassword()));
         return adminRepository.save(existingAdmin);
     }
 

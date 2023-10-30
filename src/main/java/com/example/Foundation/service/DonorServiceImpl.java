@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +18,9 @@ public class DonorServiceImpl implements DonorService, UserDetailsService {
 
     @Autowired
     private DonorRepository donorRepository;
+
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
     public Donor createDonor(Donor donor) {
@@ -33,7 +37,7 @@ public class DonorServiceImpl implements DonorService, UserDetailsService {
         existingDonor.setGender(donor.getGender());
         existingDonor.setContactNumber(donor.getContactNumber());
         existingDonor.setEmailAddress(donor.getEmailAddress());
-        existingDonor.setPassword(donor.getPassword());
+        existingDonor.setPassword(this.bCryptPasswordEncoder.encode(donor.getPassword()));
 
         return existingDonor;
     }

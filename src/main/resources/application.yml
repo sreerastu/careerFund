@@ -5,13 +5,17 @@ server:
 
 #smtp configuration and database configuration
 spring:
+  main:
+    allow-circular-references: true
   datasource:
-    url: jdbc:postgresql://localhost:5432/Foundation
-    #    url: jdbc:postgresql://careerfund.postgres.database.azure.com:5432/careerfundAzure
+    #    url: jdbc:postgresql://localhost:5432/Foundation
+    url: jdbc:postgresql://database-1.cp0sfdcoljwx.us-east-1.rds.amazonaws.com:5432/AwsDataBase
+#    url: jdbc:postgresql://careerfund.postgres.database.azure.com:5432/careerfundAzure
     username: postgres
-    #    username: careerfund@careerfund
-    #    password: Azure@123
-    password: root
+#    username: careerfund@careerfund
+#    password: Azure@123
+  #    password: root
+    password: Saikumar
   jpa:
     properties:
       hibernate:
@@ -52,6 +56,11 @@ springdoc:
     path: /swagger-ui.html
 
 
-
+#spring security
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
 
 

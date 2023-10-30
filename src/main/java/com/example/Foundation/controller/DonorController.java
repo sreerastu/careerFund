@@ -8,6 +8,7 @@ import com.example.Foundation.service.DonorServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,8 +20,12 @@ public class DonorController {
     @Autowired
     private DonorServiceImpl donorService;
 
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
     @PostMapping("/register/donor")
     public ResponseEntity<?> createDonor(@RequestBody Donor donor) {
+        donor.setPassword(this.bCryptPasswordEncoder.encode(donor.getPassword()));
 
         Donor createdDonor = donorService.createDonor(donor);
         return ResponseEntity.status(HttpStatus.OK).body(createdDonor);

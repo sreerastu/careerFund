@@ -86,4 +86,9 @@ public class Donor implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
 }

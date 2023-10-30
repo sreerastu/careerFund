@@ -56,6 +56,11 @@ public class Admin implements UserDetails {
     }
 
     @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
     @JsonIgnore
     public String getUsername() {
         return this.getEmailAddress();

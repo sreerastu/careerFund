@@ -6,10 +6,10 @@ import com.example.Foundation.dto.LoginApiDto;
 import com.example.Foundation.exception.AuthenticationException;
 import com.example.Foundation.service.*;
 import com.example.Foundation.util.JwtUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,13 +17,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("api")
 public class AuthenticationController {
 
-    @Autowired
     private JwtUtil jwtUtil;
-
-
-    @Autowired
     private AuthenticationManager authenticationManager;
-    @Autowired
     private EmailService emailService;
 
     private final StudentServiceImpl studentService;
@@ -31,8 +26,10 @@ public class AuthenticationController {
     private final TrainerServiceImpl trainerService;
     private final DonorServiceImpl donorService;
 
-    @Autowired
-    public AuthenticationController(StudentServiceImpl studentService, AdminServiceImpl adminService, TrainerServiceImpl trainerService, DonorServiceImpl donorService) {
+    public AuthenticationController(JwtUtil jwtUtil, AuthenticationManager authenticationManager, EmailService emailService, StudentServiceImpl studentService, AdminServiceImpl adminService, TrainerServiceImpl trainerService, DonorServiceImpl donorService) {
+        this.jwtUtil = jwtUtil;
+        this.authenticationManager = authenticationManager;
+        this.emailService = emailService;
         this.studentService = studentService;
         this.adminService = adminService;
         this.trainerService = trainerService;
@@ -49,7 +46,7 @@ public class AuthenticationController {
             );
 
             // Determine the user type based on your authentication logic
-            String userType = String.valueOf(studentService.determineUserType(loginCredentials.getEmailAddress()));
+            UserType userType = studentService.determineUserType(loginCredentials.getEmailAddress());
 
             // If userType is still null, authentication failed
             if (userType == null) {
@@ -57,14 +54,18 @@ public class AuthenticationController {
             }
 
             // Generate a JWT token with the determined user type
-            String token = jwtUtil.generateToken(loginCredentials.getEmailAddress(), UserType.valueOf(userType));
+            String token = jwtUtil.generateToken(loginCredentials.getEmailAddress(), userType);
 
             return ResponseEntity.ok(new JwtResponse(token));
-        } catch (Exception ex) {
+        } catch (AuthenticationException ex) {
             ex.printStackTrace();
-            throw new AuthenticationException("Invalid details provided");
+            throw ex; // Rethrow the AuthenticationException
+        } catch (BadCredentialsException ex) {
+            // Handle invalid credentials separately
+            throw new AuthenticationException("Invalid Credentials");
         }
     }
+
 
     @PostMapping("/reset/{emailAddress}")
     public ResponseEntity<?> resetPassword(@PathVariable String emailAddress) throws Exception {
@@ -76,9 +77,9 @@ public class AuthenticationController {
     }
 
     @PostMapping("/verification/{emailAddress}/{code}")
-    public ResponseEntity<?> verification(@PathVariable String emailAddress,@PathVariable String code) throws Exception {
+    public ResponseEntity<?> verification(@PathVariable String emailAddress, @PathVariable String code) throws Exception {
 
-        emailService.verifyEmail(emailAddress,code);
+        emailService.verifyEmail(emailAddress, code);
 
         return ResponseEntity.status(HttpStatus.OK).body("Mail Sent Successfully......!");
 

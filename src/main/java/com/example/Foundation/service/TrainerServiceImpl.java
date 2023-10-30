@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,6 +19,9 @@ public class TrainerServiceImpl implements TrainerService, UserDetailsService {
 
     @Autowired
     private TrainerRepository trainerRepository;
+
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
     @Override
@@ -33,7 +37,7 @@ public class TrainerServiceImpl implements TrainerService, UserDetailsService {
         existingTrainer.setLastName(trainer.getLastName());
         existingTrainer.setContactNumber(trainer.getContactNumber());
         existingTrainer.setEmailAddress(trainer.getEmailAddress());
-        existingTrainer.setPassword(trainer.getPassword());
+        existingTrainer.setPassword(this.bCryptPasswordEncoder.encode(trainer.getPassword()));
         existingTrainer.setCourse(trainer.getCourse());
         existingTrainer.setGender(trainer.getGender());
 

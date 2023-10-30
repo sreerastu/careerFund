@@ -8,6 +8,7 @@ import com.example.Foundation.service.StudentServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,10 +21,13 @@ public class StudentController {
     @Autowired
     private StudentServiceImpl studentService;
 
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
 
     @PostMapping("/register/student")
     public ResponseEntity<?> createStudent(@RequestBody Student student) {
-
+        student.setPassword(this.bCryptPasswordEncoder.encode(student.getPassword()));
         Student createdStudent = studentService.createStudent(student);
         return ResponseEntity.status(HttpStatus.OK).body(createdStudent);
     }

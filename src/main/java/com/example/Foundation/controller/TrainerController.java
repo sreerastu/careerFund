@@ -6,6 +6,7 @@ import com.example.Foundation.service.TrainerServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,10 +19,13 @@ public class TrainerController {
     @Autowired
     private TrainerServiceImpl trainerService;
 
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
 
     @PostMapping("/register/trainer")
     public ResponseEntity<?> createTrainer(@RequestBody Trainer trainer) {
-
+        trainer.setPassword(this.bCryptPasswordEncoder.encode(trainer.getPassword()));
         Trainer createdTrainer = trainerService.createTrainer(trainer);
         return ResponseEntity.status(HttpStatus.OK).body(createdTrainer);
     }
