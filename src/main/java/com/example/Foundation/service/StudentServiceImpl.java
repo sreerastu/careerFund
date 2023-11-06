@@ -12,7 +12,7 @@ import com.example.Foundation.repositories.AdminRepository;
 import com.example.Foundation.repositories.DonorRepository;
 import com.example.Foundation.repositories.StudentRepository;
 import com.example.Foundation.repositories.TrainerRepository;
-import com.example.Foundation.util.JwtUtil;
+import com.example.Foundation.util.JWTUtility;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -39,7 +39,7 @@ public class StudentServiceImpl implements StudentService, UserDetailsService {
     private DonorRepository donorRepository;
 
     @Autowired
-    private JwtUtil jwtUtil;
+    private JWTUtility jwtUtil;
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -144,7 +144,7 @@ public class StudentServiceImpl implements StudentService, UserDetailsService {
     public UserType determineUserTypeBasedOnToken(String token) {
         if (token != null) {
             // Decode the token and extract relevant claims
-            Claims claims = jwtUtil.extractAllClaims(token);
+            Claims claims = jwtUtil.getAllClaimsFromToken(token);
 
             if (claims != null) {
                 // Check a claim in the JWT to determine the user type
@@ -160,7 +160,6 @@ public class StudentServiceImpl implements StudentService, UserDetailsService {
                 }
             }
         }
-
         // Return a default user type or handle cases where the user type can't be determined
         return UserType.UNKNOWN;
     }

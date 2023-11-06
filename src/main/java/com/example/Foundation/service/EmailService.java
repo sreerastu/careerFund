@@ -9,7 +9,6 @@ import com.example.Foundation.repositories.AdminRepository;
 import com.example.Foundation.repositories.DonorRepository;
 import com.example.Foundation.repositories.StudentRepository;
 import com.example.Foundation.repositories.TrainerRepository;
-import jakarta.mail.MessagingException;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +18,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 @Service

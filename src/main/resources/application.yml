@@ -1,21 +1,18 @@
 #server port
 server:
-  port: 31100
+  port: 9090
 
+jwt:
+  secret: f82e3ba1a4d359ef0a37815c379d216999473e0b7f425f86c65e78c2a1380dca
 
 #smtp configuration and database configuration
 spring:
-  main:
-    allow-circular-references: true
   datasource:
-    #    url: jdbc:postgresql://localhost:5432/Foundation
-    url: jdbc:postgresql://database-1.cp0sfdcoljwx.us-east-1.rds.amazonaws.com:5432/AwsDataBase
-#    url: jdbc:postgresql://careerfund.postgres.database.azure.com:5432/careerfundAzure
+#    url: jdbc:postgresql://localhost:5432/Foundation
+    url: jdbc:postgresql://database-1.cwijv6yv2kbu.eu-north-1.rds.amazonaws.com:5432/CareerfundAws
     username: postgres
-#    username: careerfund@careerfund
-#    password: Azure@123
-  #    password: root
     password: Saikumar
+#    password: root
   jpa:
     properties:
       hibernate:
