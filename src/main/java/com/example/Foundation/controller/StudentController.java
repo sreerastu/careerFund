@@ -73,4 +73,10 @@ public class StudentController {
         studentService.unAssignStudentFromTrainer(trainerId, studentId);
         return ResponseEntity.ok("Student unassigned from trainer successfully");
     }
+
+    @GetMapping("/placedStudents")
+    public ResponseEntity<?> getPlacedStudents(){
+        List<Student> allPlacedStudents = studentService.getAllPlacedStudents();
+        return ResponseEntity.status(HttpStatus.OK).body(allPlacedStudents);
+    }
 }

@@ -1,11 +1,8 @@
 package com.example.Foundation.service;
 
-import com.example.Foundation.Enum.UserType;
 import com.example.Foundation.exception.InvalidStudentIdException;
 import com.example.Foundation.exception.StudentNotFoundException;
 import com.example.Foundation.exception.TrainerNotFoundException;
-import com.example.Foundation.modal.Admin;
-import com.example.Foundation.modal.Donor;
 import com.example.Foundation.modal.Student;
 import com.example.Foundation.modal.Trainer;
 import com.example.Foundation.repositories.AdminRepository;
@@ -13,7 +10,6 @@ import com.example.Foundation.repositories.DonorRepository;
 import com.example.Foundation.repositories.StudentRepository;
 import com.example.Foundation.repositories.TrainerRepository;
 import com.example.Foundation.util.JWTUtility;
-import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -22,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class StudentServiceImpl implements StudentService, UserDetailsService {
@@ -124,7 +121,7 @@ public class StudentServiceImpl implements StudentService, UserDetailsService {
     }
 
 
-    public UserType determineUserType(String emailAddress) {
+   /* public UserType determineUserType(String emailAddress) {
         Admin admin = adminRepository.findByEmailAddress(emailAddress);
         Trainer trainer = trainerRepository.findByEmailAddress(emailAddress);
         Donor donor = donorRepository.findByEmailAddress(emailAddress);
@@ -139,9 +136,9 @@ public class StudentServiceImpl implements StudentService, UserDetailsService {
         } else {
             return student.getUserType();
         }
-    }
+    }*/
 
-    public UserType determineUserTypeBasedOnToken(String token) {
+  /*  public UserType determineUserTypeBasedOnToken(String token) {
         if (token != null) {
             // Decode the token and extract relevant claims
             Claims claims = jwtUtil.getAllClaimsFromToken(token);
@@ -162,5 +159,11 @@ public class StudentServiceImpl implements StudentService, UserDetailsService {
         }
         // Return a default user type or handle cases where the user type can't be determined
         return UserType.UNKNOWN;
+    }
+*/
+    public List<Student> getAllPlacedStudents() {
+        List<Student> placedStudents = studentRepository.findAll();
+        List<Student> collect = placedStudents.stream().filter(x -> x.getPlaced() == true).collect(Collectors.toList());
+        return collect;
     }
 }

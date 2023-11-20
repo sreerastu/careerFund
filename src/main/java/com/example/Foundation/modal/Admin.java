@@ -16,6 +16,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -34,6 +35,7 @@ public class Admin implements UserDetails {
     protected int adminId;
     protected String firstName;
     protected String lastName;
+    @Size(min = 10, max = 10, message = "Contact number must be 10 digits")
     protected String contactNumber;
     @Column(nullable = false)
     protected String password;

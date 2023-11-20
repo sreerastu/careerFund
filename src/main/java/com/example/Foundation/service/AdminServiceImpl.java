@@ -35,7 +35,7 @@ public class AdminServiceImpl implements AdminService, UserDetailsService {
         existingAdmin.setFirstName(admin.getFirstName());
         existingAdmin.setLastName(admin.getLastName());
         existingAdmin.setContactNumber(admin.getContactNumber());
-        //existingAdmin.setDob(admin.getDob());
+        existingAdmin.setGender(admin.getGender());
         existingAdmin.setEmailAddress(admin.getEmailAddress());
         existingAdmin.setPassword(this.bCryptPasswordEncoder.encode(admin.getPassword()));
         return adminRepository.save(existingAdmin);

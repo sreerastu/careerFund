@@ -8,11 +8,11 @@ jwt:
 #smtp configuration and database configuration
 spring:
   datasource:
-#    url: jdbc:postgresql://localhost:5432/Foundation
-    url: jdbc:postgresql://database-1.cwijv6yv2kbu.eu-north-1.rds.amazonaws.com:5432/CareerfundAws
+    url: jdbc:postgresql://localhost:5432/CareerFunds
+#    url: jdbc:postgresql://database-1.cwijv6yv2kbu.eu-north-1.rds.amazonaws.com:5432/CareerfundAws
     username: postgres
-    password: Saikumar
-#    password: root
+#    password: Saikumar
+    password: root
   jpa:
     properties:
       hibernate:
@@ -50,7 +50,7 @@ eureka:
 #Swagger
 springdoc:
   swagger-ui:
-    path: /swagger-ui.html
+    path: api/swagger-ui.html
 
 
 #spring security
