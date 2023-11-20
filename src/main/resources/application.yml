@@ -9,7 +9,7 @@ jwt:
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/CareerFunds
-#    url: jdbc:postgresql://database-1.cwijv6yv2kbu.eu-north-1.rds.amazonaws.com:5432/CareerfundAws
+#    url: jdbc:postgresql://database-1.cwijv6yv2kbu.eu-north-1.rds.amazonaws.com:5432/CareerFundAws
     username: postgres
 #    password: Saikumar
     password: root
@@ -50,7 +50,7 @@ eureka:
 #Swagger
 springdoc:
   swagger-ui:
-    path: api/swagger-ui.html
+    path: /swagger-ui.html
 
 
 #spring security
