@@ -50,7 +50,7 @@ eureka:
 #Swagger
 springdoc:
   swagger-ui:
-    path: /swagger-ui.html
+    path: /api/register/swagger-ui.html
 
 
 #spring security
