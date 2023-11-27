@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -24,7 +25,7 @@ public class DonorController {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @PostMapping("/register/donor")
-    public ResponseEntity<?> createDonor(@RequestBody Donor donor) {
+    public ResponseEntity<?> createDonor(@Valid @RequestBody Donor donor) {
         donor.setPassword(this.bCryptPasswordEncoder.encode(donor.getPassword()));
 
         Donor createdDonor = donorService.createDonor(donor);

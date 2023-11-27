@@ -23,7 +23,7 @@ public class Blog {
     @Lob
     private byte[] image;
 
-    private Double description;
+    private String description;
 
     @Temporal(TemporalType.TIMESTAMP)
     Date postedDateTime;

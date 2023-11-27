@@ -1,4 +1,5 @@
 package com.example.Foundation.config;
+
 import com.example.Foundation.service.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -10,12 +11,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.filter.CorsFilter;
 
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
+public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private CustomUserDetails userService;
@@ -23,8 +23,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
     @Autowired
     private JwtFilter jwtFilter;
 
-    @Autowired
-    private CorsConfig corsConfig;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -41,7 +39,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf()
                 .disable()
-                .cors().and()
                 .authorizeRequests()
                 .antMatchers("/api/authenticate", "/api/register/**")
                 .permitAll()
@@ -51,7 +48,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-        http.addFilterBefore(corsConfig.corsFilter(), CorsFilter.class);
 
 
     }

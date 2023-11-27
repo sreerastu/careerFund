@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -24,7 +25,7 @@ public class AdminController {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @PostMapping("/register/admin")
-    public ResponseEntity<?> createAdmin(@RequestBody Admin admin) {
+    public ResponseEntity<?> createAdmin(@Valid @RequestBody Admin admin) {
         admin.setPassword(this.bCryptPasswordEncoder.encode(admin.getPassword()));
 
         Admin createdAdmin = adminService.createAdmin(admin);

@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -26,7 +27,7 @@ public class StudentController {
 
 
     @PostMapping("/register/student")
-    public ResponseEntity<?> createStudent(@RequestBody Student student) {
+    public ResponseEntity<?> createStudent(@Valid @RequestBody Student student) {
         student.setPassword(this.bCryptPasswordEncoder.encode(student.getPassword()));
         Student createdStudent = studentService.createStudent(student);
         return ResponseEntity.status(HttpStatus.OK).body(createdStudent);

@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -24,7 +25,7 @@ public class TrainerController {
 
 
     @PostMapping("/register/trainer")
-    public ResponseEntity<?> createTrainer(@RequestBody Trainer trainer) {
+    public ResponseEntity<?> createTrainer(@Valid @RequestBody Trainer trainer) {
         trainer.setPassword(this.bCryptPasswordEncoder.encode(trainer.getPassword()));
         Trainer createdTrainer = trainerService.createTrainer(trainer);
         return ResponseEntity.status(HttpStatus.OK).body(createdTrainer);

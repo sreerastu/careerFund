@@ -21,7 +21,7 @@ public class TechController {
     @Autowired
     private TechServiceImpl techService;
 
-    @PostMapping("/upload")
+    @PostMapping("/techUpload")
     public ResponseEntity<Technologies> handleFileUpload(@RequestParam("file") MultipartFile file,
                                                          @RequestParam("description") String description) {
         try {
@@ -39,11 +39,11 @@ public class TechController {
         }
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<byte[]> getImage(@PathVariable int id) {
-        Optional<Technologies> tech = techService.getImageById(id);
+    @GetMapping("/{techId}")
+    public ResponseEntity<byte[]> getImage(@PathVariable int techId) {
+        Optional<Technologies> tech = techService.getImageById(techId);
         if (tech.isPresent()) {
-            byte[] imageBytes = techService.getImageById(id).get().getImage();
+            byte[] imageBytes = techService.getImageById(techId).get().getImage();
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.IMAGE_JPEG); // Adjust based on your image type
 

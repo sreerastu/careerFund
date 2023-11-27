@@ -54,13 +54,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
-	<!--	&lt;!&ndash; https://mvnrepository.com/artifact/jakarta.mail/jakarta.mail-api &ndash;&gt;
-		<dependency>
-			<groupId>jakarta.mail</groupId>
-			<artifactId>jakarta.mail-api</artifactId>
-			<version>2.1.2</version>
-		</dependency>-->
-		<!-- https://mvnrepository.com/artifact/com.razorpay/razorpay-java -->
 		<dependency>
 			<groupId>com.razorpay</groupId>
 			<artifactId>razorpay-java</artifactId>
