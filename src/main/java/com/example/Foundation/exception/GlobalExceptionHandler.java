@@ -20,40 +20,42 @@ import java.util.Date;
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(AdminNotFoundException.class)
-    public ResponseEntity<?> handleAdminNotFoundException(AdminNotFoundException ex, WebRequest request){
+    public ResponseEntity<?> handleAdminNotFoundException(AdminNotFoundException ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
                 request.getDescription(false), HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity<?> handleAuthenticationException(AuthenticationException ex, WebRequest request){
+    public ResponseEntity<?> handleAuthenticationException(AuthenticationException ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
                 request.getDescription(false), HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(InvalidStudentIdException.class)
-    public ResponseEntity<?> handleInvalidStudentIdException(InvalidStudentIdException ex, WebRequest request){
+    public ResponseEntity<?> handleInvalidStudentIdException(InvalidStudentIdException ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
                 request.getDescription(false), HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
     }
+
     @ExceptionHandler(InvalidDonorIdException.class)
-    public ResponseEntity<?> handleInvalidDonorIdException(InvalidDonorIdException ex, WebRequest request){
+    public ResponseEntity<?> handleInvalidDonorIdException(InvalidDonorIdException ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
                 request.getDescription(false), HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
+
     @ExceptionHandler(StudentNotFoundException.class)
-    public ResponseEntity<?> handleStudentNotFoundException(StudentNotFoundException ex, WebRequest request){
+    public ResponseEntity<?> handleStudentNotFoundException(StudentNotFoundException ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
                 request.getDescription(false), HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(TrainerNotFoundException.class)
-    public ResponseEntity<?> handleTrainerNotFoundException(TrainerNotFoundException ex, WebRequest request){
+    public ResponseEntity<?> handleTrainerNotFoundException(TrainerNotFoundException ex, WebRequest request) {
 
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
                 request.getDescription(false), HttpStatus.NOT_FOUND);
@@ -62,7 +64,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public final ResponseEntity<Object> handleAllExceptions(Exception ex, WebRequest request){
+    public final ResponseEntity<Object> handleAllExceptions(Exception ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
                 request.getDescription(false), HttpStatus.INTERNAL_SERVER_ERROR);
         return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -81,7 +83,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 break;
             }
         }
+        for (FieldError error : ex.getBindingResult().getFieldErrors()) {
+            if ("emailAddress".equals(error.getField())) {
+                errorMessage = error.getDefaultMessage();
+                break;
+            }
 
+        }
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), errorMessage,
                 request.getDescription(false), HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);

@@ -16,6 +16,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.HashSet;
@@ -39,7 +41,9 @@ public class Admin implements UserDetails {
     protected String contactNumber;
     @Column(nullable = false)
     protected String password;
-    @Column(nullable = false,unique = true)
+    @Column(nullable = false, unique = true)
+    @Email(regexp = "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,3}",
+            flags = Pattern.Flag.CASE_INSENSITIVE,message = "please enter correct emailAddress")
     protected String emailAddress;
     @Enumerated(EnumType.STRING)
     private Gender gender;
