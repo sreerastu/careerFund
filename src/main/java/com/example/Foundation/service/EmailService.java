@@ -87,13 +87,12 @@ public class EmailService {
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
         helper.setSubject("Email Verification");
-        String randomPwd = sendTempPassword();
+        String randomPwd = sendTempOtpPassword();
         helper.setText("Your Verification Code is " + randomPwd + ",Please use the code  for mail verification");
         helper.setFrom(sender);
         helper.setTo(emailAddress);
         javaMailSender.send(message);
-
-        if(randomPwd == code) {
+        if(randomPwd.equals(code)) {
 
             log.info("Mail Sent Successfully......");
             return "Mail Sent Successfully......!";
@@ -108,6 +107,13 @@ public class EmailService {
         String pwd = RandomStringUtils.random(10, characters);
         log.info(pwd);
         return pwd;
+    }
+
+
+    public String sendTempOtpPassword() {
+        String otp = RandomStringUtils.randomNumeric(4); // Generate 4-digit OTP
+        log.info(otp);
+        return otp;
     }
 
 }

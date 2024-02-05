@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,7 +28,7 @@ public class PaymentController {
     }
 
     @PostMapping("/donor/{donorId}/makePayment")
-    public ResponseEntity<?> makePayment(@PathVariable int donorId, @RequestParam Double amount) throws InvalidDonorIdException, RazorpayException {
+    public ResponseEntity<?> makePayment(@PathVariable int donorId, @RequestParam Double amount) throws InvalidDonorIdException, RazorpayException, MessagingException {
 
         Donor donor = donorService.getDonorById(donorId);
         if (donor != null) {
