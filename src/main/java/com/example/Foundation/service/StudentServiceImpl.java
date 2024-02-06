@@ -46,17 +46,19 @@ public class StudentServiceImpl implements StudentService, UserDetailsService {
         return studentRepository.save(student);
     }
 
-    @Override
     public Student updateStudent(int studentId, Student student) throws InvalidStudentIdException {
-        Student existingStudent = studentRepository.findById(student.getStudentId()).orElseThrow(() -> new InvalidStudentIdException("please enter a valid studentId"));
+        Student existingStudent = studentRepository.findById(student.getStudentId())
+                .orElseThrow(() -> new InvalidStudentIdException("Please enter a valid studentId"));
+
         existingStudent.setFirstName(student.getFirstName());
         existingStudent.setLastName(student.getLastName());
         existingStudent.setGender(student.getGender());
         existingStudent.setEmailAddress(student.getEmailAddress());
         existingStudent.setPassword(this.bCryptPasswordEncoder.encode(student.getPassword()));
         existingStudent.setContactNumber(student.getContactNumber());
+        existingStudent.setImage(student.getImage());
 
-        return existingStudent;
+        return studentRepository.save(existingStudent);
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.example.Foundation.exception.AdminNotFoundException;
 import com.example.Foundation.exception.InvalidAdminIdException;
 import com.example.Foundation.modal.Admin;
 import com.example.Foundation.service.AdminServiceImpl;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,8 @@ public class AdminController {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
+
+
     @PostMapping("/register/admin")
     public ResponseEntity<?> createAdmin(@Valid @RequestBody Admin admin) {
         admin.setPassword(this.bCryptPasswordEncoder.encode(admin.getPassword()));
@@ -36,6 +39,7 @@ public class AdminController {
     public ResponseEntity<?> updateAdmin(@PathVariable int adminId, @RequestBody Admin adminX) throws AdminNotFoundException {
         Admin admin = adminService.updateAdmin(adminId, adminX);
         return ResponseEntity.status(HttpStatus.OK).body(admin);
+
     }
 
     @GetMapping("/admins")

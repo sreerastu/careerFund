@@ -44,6 +44,10 @@ public class Student implements UserDetails {
 
     private Boolean placed;
 
+
+    @Lob
+    private byte[] image;
+
     @Enumerated(EnumType.STRING)
     private UserType userType;
 
