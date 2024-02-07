@@ -7,7 +7,9 @@ import com.example.Foundation.modal.SuccessStories;
 import com.example.Foundation.repositories.SuccessStoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -19,11 +21,12 @@ public class SuccessStoryServiceImpl {
     @Autowired
     private SuccessStoryRepository successStoryRepository;
 
-    public SuccessStories createSuccessStory(SuccessStories successStories, int studentId) throws InvalidStudentIdException {
+    public SuccessStories createSuccessStory(SuccessStories successStories, int studentId, MultipartFile imageFile) throws InvalidStudentIdException, IOException {
 
         Student student = studentService.getStudentById(studentId);
-        if (student != null && student.getPlaced() != null && student.getPlaced() && student.getSuccessStories() == null) {
+        if (student != null && student.getPlaced() != null && student.getPlaced() && student.getSuccessStories() == null && imageFile !=null) {
             successStories.setStudent(student);
+            successStories.setImage(imageFile.getBytes());
             return successStoryRepository.save(successStories);
         } else {
             throw new IllegalStateException("Cannot create success story for non-placed student or student already has a success story.");

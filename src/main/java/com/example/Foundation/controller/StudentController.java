@@ -5,8 +5,6 @@ import com.example.Foundation.exception.StudentNotFoundException;
 import com.example.Foundation.exception.TrainerNotFoundException;
 import com.example.Foundation.modal.Student;
 import com.example.Foundation.service.StudentServiceImpl;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,18 +27,6 @@ public class StudentController {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
-
-   /* @PostMapping("/register/student")
-    public ResponseEntity<?> createStudent(@Valid @RequestParam("userData") String userData , @RequestParam("file")MultipartFile file) throws IOException {
-        Student student1 = objectMapper.readValue(userData, Student.class);
-        student1.setPassword(this.bCryptPasswordEncoder.encode(student1.getPassword()));
-        student1.setImage(file.getBytes());
-        Student createdStudent = studentService.createStudent(student1);
-        return ResponseEntity.status(HttpStatus.OK).body(createdStudent);
-    }*/
 
     @PostMapping("/register/student")
     public ResponseEntity<?> createStudent(@Valid @RequestBody Student student) {

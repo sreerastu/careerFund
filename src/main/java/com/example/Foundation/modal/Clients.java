@@ -1,7 +1,6 @@
 package com.example.Foundation.modal;
 
 
-import com.example.Foundation.Enum.Gender;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,8 +28,6 @@ public class Clients {
     protected String password;
     @Lob
     private byte[] image;
-    @Column(nullable = false, unique = true)
-    protected String emailAddress;
     private String companyName;
     private String description;
 

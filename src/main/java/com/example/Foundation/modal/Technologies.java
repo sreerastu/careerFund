@@ -19,6 +19,8 @@ public class Technologies {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int techId;
 
+    private String techTitle;
+
     @Lob
     private byte[] image;
 

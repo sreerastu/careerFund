@@ -1,37 +1,45 @@
 package com.example.Foundation.controller;
 
 import com.example.Foundation.modal.Enquire;
+
 import com.example.Foundation.service.EnquireServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.multipart.MultipartFile;
+import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("api")
+@RequestMapping("/enquire")
 public class EnquireController {
 
     @Autowired
     private EnquireServiceImpl enquireService;
 
-    @PostMapping("/register/enquire")
-    public ResponseEntity<?> createEnquire(@RequestBody Enquire enquire) {
-        Enquire enquire1 = enquireService.saveEnquire(enquire);
-        return ResponseEntity.status(HttpStatus.OK).body(enquire1);
+    @PostMapping("/add")
+    public Enquire addEnquire(@ModelAttribute Enquire enquire,
+                              @RequestParam(value = "imageFile", required = false) MultipartFile imageFile) throws IOException {
+        return enquireService.saveEnquire(enquire, imageFile);
     }
 
-    @GetMapping("/enquires")
-    public ResponseEntity<?> getAllEnquire() {
-        List<Enquire> stories = enquireService.getAllEnquires();
-        return ResponseEntity.status(HttpStatus.OK).body(stories);
+    @GetMapping("/all")
+    public List<Enquire> getAllEnquires() {
+        return enquireService.getAllEnquires();
     }
 
-    @GetMapping("/enquire/{enquireId}")
-    public ResponseEntity<?> getEnquire(@PathVariable int enquireId) {
-        Optional<Enquire> enquire = enquireService.getEnquireById(enquireId);
-        return ResponseEntity.status(HttpStatus.OK).body(enquire);
+    @GetMapping("/{id}")
+    public Enquire getEnquireById(@PathVariable int id) {
+        return enquireService.getEnquireById(id);
+    }
+
+    @PutMapping("/update/{id}")
+    public Enquire updateEnquire(@PathVariable int id, @ModelAttribute Enquire enquireDetails,
+                                 @RequestParam(value = "imageFile", required = false) MultipartFile imageFile) throws IOException {
+        return enquireService.updateEnquire(id, enquireDetails, imageFile);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public void deleteEnquire(@PathVariable int id) {
+        enquireService.deleteEnquire(id);
     }
 }

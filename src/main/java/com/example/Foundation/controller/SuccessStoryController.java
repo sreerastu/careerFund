@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -18,9 +20,10 @@ public class SuccessStoryController {
     private SuccessStoryServiceImpl successStoryService;
 
     @PostMapping("/register/successStory")
-    public ResponseEntity<?> createSuccessStory(@RequestBody SuccessStories successStories,
-                                                @RequestParam int studentId) throws InvalidStudentIdException {
-        SuccessStories stories = successStoryService.createSuccessStory(successStories,studentId);
+    public ResponseEntity<?> createSuccessStory(@ModelAttribute SuccessStories successStories,
+                                                @RequestParam int studentId,
+                                                @RequestParam(value = "imageFile", required = false) MultipartFile imageFile) throws InvalidStudentIdException, IOException {
+        SuccessStories stories = successStoryService.createSuccessStory(successStories,studentId,imageFile);
         return ResponseEntity.status(HttpStatus.OK).body(stories);
     }
 
