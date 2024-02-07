@@ -1,7 +1,6 @@
 package com.example.Foundation.service;
 
 import com.example.Foundation.modal.Blog;
-import com.example.Foundation.modal.Enquire;
 import com.example.Foundation.repositories.BlogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

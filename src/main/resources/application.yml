@@ -8,12 +8,12 @@ jwt:
 #smtp configuration and database configuration
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/AwsDB
-#    url: jdbc:postgresql://database-1.cwijv6yv2kbu.eu-north-1.rds.amazonaws.com:5432/AwsDB
+#    url: jdbc:postgresql://localhost:5432/AwsDB
+    url: jdbc:postgresql://database-1.cwijv6yv2kbu.eu-north-1.rds.amazonaws.com:5432/AwsDB
     username: postgres
 #    password: mahesh$106
-#    password: SaiKumar
-    password: root
+    password: SaiKumar
+#    password: root
   jpa:
     properties:
       hibernate:

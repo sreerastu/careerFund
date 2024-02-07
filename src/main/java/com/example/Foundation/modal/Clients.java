@@ -1,6 +1,5 @@
 package com.example.Foundation.modal;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,24 +11,24 @@ import javax.validation.constraints.Size;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
 @ToString
-@Table(name = "CLIENT_TBL")
+@Entity
+@Table(name = "ENQUIRE_TBL")
 public class Clients {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected int clientId;
-    protected String firstName;
-    protected String lastName;
+    private int clientId;
+
+    private String name;
+
+    private String emailAddress;
+
     @Size(min = 10, max = 10, message = "Contact number must be 10 digits")
-    protected String contactNumber;
-    @Column(nullable = false)
-    protected String password;
+    private String contactNumber;
     @Lob
     private byte[] image;
-    private String companyName;
-    private String description;
 
+    private String description;
 
 }

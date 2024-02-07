@@ -23,11 +23,13 @@ public class TechController {
 
     @PostMapping("/techUpload")
     public ResponseEntity<Technologies> handleFileUpload(@RequestParam("file") MultipartFile file,
+                                                         @RequestParam("techTitle") String techTitle,
                                                          @RequestParam("description") String description) {
         try {
             byte[] compressedImageBytes = techService.compressImage(file.getBytes());
 
             Technologies tech = new Technologies();
+            tech.setTechTitle(techTitle);
             tech.setImage(compressedImageBytes);
             tech.setDescription(description);
             Technologies technologies = techService.saveImage(tech);
