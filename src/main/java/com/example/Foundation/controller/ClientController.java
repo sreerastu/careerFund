@@ -4,6 +4,10 @@ import com.example.Foundation.modal.Clients;
 
 import com.example.Foundation.service.ClientServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
@@ -14,32 +18,45 @@ import java.util.List;
 public class ClientController {
 
     @Autowired
-    private ClientServiceImpl enquireService;
+    private ClientServiceImpl clientService;
 
     @PostMapping("/add")
     public Clients addEnquire(@ModelAttribute Clients enquire,
                               @RequestParam(value = "imageFile", required = false) MultipartFile imageFile) throws IOException {
-        return enquireService.saveEnquire(enquire, imageFile);
+        return clientService.saveClient(enquire, imageFile);
     }
 
     @GetMapping("/all")
     public List<Clients> getAllEnquires() {
-        return enquireService.getAllEnquires();
+        return clientService.getAllClients();
     }
 
     @GetMapping("/{id}")
     public Clients getEnquireById(@PathVariable int id) {
-        return enquireService.getEnquireById(id);
+        return clientService.getClientById(id);
     }
 
     @PutMapping("/update/{id}")
     public Clients updateEnquire(@PathVariable int id, @ModelAttribute Clients enquireDetails,
                                  @RequestParam(value = "imageFile", required = false) MultipartFile imageFile) throws IOException {
-        return enquireService.updateEnquire(id, enquireDetails, imageFile);
+        return clientService.updateClient(id, enquireDetails, imageFile);
     }
 
     @DeleteMapping("/delete/{id}")
     public void deleteEnquire(@PathVariable int id) {
-        enquireService.deleteEnquire(id);
+        clientService.deleteClient(id);
+    }
+
+
+    @GetMapping("/{id}/image")
+    public ResponseEntity<ByteArrayResource> getClientImageById(@PathVariable int id) {
+        byte[] imageBytes = clientService.getClientImageById(id);
+        if (imageBytes != null) {
+            return ResponseEntity.ok()
+                    .contentType(MediaType.IMAGE_JPEG) // Adjust MediaType based on your image type
+                    .body(new ByteArrayResource(imageBytes));
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 }

@@ -42,7 +42,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/api/authenticate", "/api/register/**", "/api/donors", "/api/stories",
                         "/api/technologies/all", "/api/blogs/all", "/api/payments", "/api/topPayments", "/api/articles/all", "/clients/all")
-                .permitAll()
+                .permitAll().antMatchers(AUTH_WHITELIST).permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -52,4 +52,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 
     }
+
+
+private static final String[] AUTH_WHITELIST = {
+
+        "/api/vi/auth/**",
+        "/v3/api-docs/**",
+        "/v3/api-docs.yaml",
+        "/api/swagger-ui/**",
+        "/api/swagger-ui.html"
+
+    };
 }
