@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @ToString
 @Entity
-@Table(name = "ENQUIRE_TBL")
+@Table(name = "CLIENTS_TBL")
 public class Clients {
 
     @Id
