@@ -13,13 +13,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 @Service
 public class TrainerServiceImpl implements TrainerService, UserDetailsService {
+
+    @Autowired
+    private S3Service s3Service; // Injecting the S3Service
 
 
     @Autowired
@@ -28,18 +28,16 @@ public class TrainerServiceImpl implements TrainerService, UserDetailsService {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    private static String UPLOADS_DIR = "./src/main/resources/static/uploads/";
+    //  private static String UPLOADS_DIR = "./src/main/resources/static/uploads/";
 
 
     @Override
     public Trainer createTrainer(Trainer trainer, MultipartFile file) throws IOException {
         if (file != null && !file.isEmpty()) {
-            // Save image file to uploads directory
             String fileName = file.getOriginalFilename();
-            assert fileName != null;
-            Path path = Paths.get(UPLOADS_DIR + fileName);
-            Files.write(path, file.getBytes());
             trainer.setImage(fileName);
+            // Upload the image to S3
+            s3Service.uploadImageToS3(fileName, file);
         }
         return trainerRepository.save(trainer);
     }

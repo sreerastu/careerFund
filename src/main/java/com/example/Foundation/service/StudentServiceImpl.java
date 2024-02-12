@@ -19,16 +19,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class StudentServiceImpl implements StudentService, UserDetailsService {
 
-    private static String UPLOADS_DIR = "./src/main/resources/static/uploads/";
+    @Autowired
+    private S3Service s3Service; // Injecting the S3Service
+
+    //   private static String UPLOADS_DIR = "./src/main/resources/static/uploads/";
 
     @Autowired
     private StudentRepository studentRepository;
@@ -51,12 +51,10 @@ public class StudentServiceImpl implements StudentService, UserDetailsService {
     @Override
     public Student createStudent(Student student, MultipartFile file) throws IOException {
         if (file != null && !file.isEmpty()) {
-            // Save image file to uploads directory
             String fileName = file.getOriginalFilename();
-            assert fileName != null;
-            Path path = Paths.get(UPLOADS_DIR + fileName);
-            Files.write(path, file.getBytes());
             student.setImage(fileName);
+            // Upload the image to S3
+            s3Service.uploadImageToS3(fileName, file);
         }
         return studentRepository.save(student);
     }

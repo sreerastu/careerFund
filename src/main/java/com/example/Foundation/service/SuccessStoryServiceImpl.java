@@ -10,15 +10,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 @Service
 public class SuccessStoryServiceImpl {
 
-    private static String UPLOADS_DIR = "./src/main/resources/static/uploads/";
+    @Autowired
+    private S3Service s3Service; // Injecting the S3Service
+
+    //   private static String UPLOADS_DIR = "./src/main/resources/static/uploads/";
 
     @Autowired
     private StudentServiceImpl studentService;
@@ -32,10 +32,9 @@ public class SuccessStoryServiceImpl {
         if (student != null && student.getPlaced() != null && file != null && !file.isEmpty()) {
             successStories.setStudent(student);
             String fileName = file.getOriginalFilename();
-            assert fileName != null;
-            Path path = Paths.get(UPLOADS_DIR + fileName);
-            Files.write(path, file.getBytes());
             successStories.setImage(fileName);
+            // Upload the image to S3
+            s3Service.uploadImageToS3(fileName, file);
             return successStoryRepository.save(successStories);
         } else {
             throw new IllegalStateException("Cannot create success story for non-placed student.");

@@ -1,22 +1,21 @@
 package com.example.Foundation.service;
 
 import com.example.Foundation.modal.Articles;
-
 import com.example.Foundation.repositories.ArticlesRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class ArticlesService {
+    @Autowired
+    private S3Service s3Service; // Injecting the S3Service
 
-    private static String UPLOADS_DIR = "./src/main/resources/static/uploads/";
+    //  private static String UPLOADS_DIR = "./src/main/resources/static/uploads/";
 
     private final ArticlesRepository articlesRepository;
 
@@ -26,12 +25,10 @@ public class ArticlesService {
 
     public Articles saveArticle(Articles article, MultipartFile file) throws IOException {
         if (file != null && !file.isEmpty()) {
-            // Save image file to uploads directory
             String fileName = file.getOriginalFilename();
-            assert fileName != null;
-            Path path = Paths.get(UPLOADS_DIR + fileName);
-            Files.write(path, file.getBytes());
             article.setImage(fileName);
+            // Upload the image to S3
+            s3Service.uploadImageToS3(fileName, file);
         }
         return articlesRepository.save(article);
     }

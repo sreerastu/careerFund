@@ -13,15 +13,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 @Service
 public class DonorServiceImpl implements DonorService, UserDetailsService {
 
-    private static String UPLOADS_DIR = "./src/main/resources/static/uploads/";
+    @Autowired
+    private S3Service s3Service; // Injecting the S3Service
+
+    //   private static String UPLOADS_DIR = "./src/main/resources/static/uploads/";
 
     @Autowired
     private DonorRepository donorRepository;
@@ -32,12 +32,10 @@ public class DonorServiceImpl implements DonorService, UserDetailsService {
     @Override
     public Donor createDonor(Donor donor, MultipartFile file) throws IOException {
         if (file != null && !file.isEmpty()) {
-            // Save image file to uploads directory
             String fileName = file.getOriginalFilename();
-            assert fileName != null;
-            Path path = Paths.get(UPLOADS_DIR + fileName);
-            Files.write(path, file.getBytes());
             donor.setImage(fileName);
+            // Upload the image to S3
+            s3Service.uploadImageToS3(fileName, file);
         }
 
         return donorRepository.save(donor);
