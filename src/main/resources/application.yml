@@ -69,4 +69,4 @@ aws:
   secretKey: PM6MkUoyMv5LeOelOjGS4PkY1sLJZ7JKRg2aB3L9
   region: eu-north-1
   s3:
-    bucketName: careerfund-image
+    bucketName: careerfund-images
