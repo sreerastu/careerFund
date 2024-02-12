@@ -1,13 +1,15 @@
 package com.example.Foundation.service;
 import com.example.Foundation.exception.TrainerNotFoundException;
 import com.example.Foundation.modal.Trainer;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface TrainerService {
 
 
-    Trainer createTrainer(Trainer trainer);
+    Trainer createTrainer(Trainer trainer, MultipartFile file) throws IOException;
 
     Trainer updateTrainer(int trainerId, Trainer trainer) throws TrainerNotFoundException;
 

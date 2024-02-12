@@ -50,6 +50,9 @@ public class Admin implements UserDetails {
     @Enumerated(EnumType.ORDINAL)
     private UserType userType;
 
+    private String image;  // New field to store image path
+
+
 
     @Override
     @JsonIgnore

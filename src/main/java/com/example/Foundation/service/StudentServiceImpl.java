@@ -16,12 +16,19 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class StudentServiceImpl implements StudentService, UserDetailsService {
+
+    private static String UPLOADS_DIR = "./src/main/resources/static/uploads/";
 
     @Autowired
     private StudentRepository studentRepository;
@@ -42,7 +49,15 @@ public class StudentServiceImpl implements StudentService, UserDetailsService {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
-    public Student createStudent(Student student) {
+    public Student createStudent(Student student, MultipartFile file) throws IOException {
+        if (file != null && !file.isEmpty()) {
+            // Save image file to uploads directory
+            String fileName = file.getOriginalFilename();
+            assert fileName != null;
+            Path path = Paths.get(UPLOADS_DIR + fileName);
+            Files.write(path, file.getBytes());
+            student.setImage(fileName);
+        }
         return studentRepository.save(student);
     }
 
@@ -53,10 +68,13 @@ public class StudentServiceImpl implements StudentService, UserDetailsService {
         existingStudent.setFirstName(student.getFirstName());
         existingStudent.setLastName(student.getLastName());
         existingStudent.setGender(student.getGender());
+        existingStudent.setCourse(student.getCourse());
         existingStudent.setEmailAddress(student.getEmailAddress());
         existingStudent.setPassword(this.bCryptPasswordEncoder.encode(student.getPassword()));
         existingStudent.setContactNumber(student.getContactNumber());
-
+        if (student.getImage() != null) {
+            existingStudent.setImage(student.getImage());
+        }
         return studentRepository.save(existingStudent);
     }
 

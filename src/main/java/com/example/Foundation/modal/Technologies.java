@@ -1,5 +1,6 @@
 package com.example.Foundation.modal;
 
+import com.example.Foundation.Enum.Course;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,10 +20,11 @@ public class Technologies {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int techId;
 
-    private String techTitle;
+    @Enumerated(EnumType.STRING)
+    private Course techTitle;
 
-    @Lob
-    private byte[] image;
+    private String image;
 
-    private String description;
+
+    private String certification;
 }

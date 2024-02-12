@@ -10,8 +10,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -25,10 +27,10 @@ public class DonorController {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @PostMapping("/register/donor")
-    public ResponseEntity<?> createDonor(@Valid @RequestBody Donor donor) {
+    public ResponseEntity<?> createDonor(@Valid @ModelAttribute Donor donor,@RequestParam(required = false) MultipartFile file) throws IOException {
         donor.setPassword(this.bCryptPasswordEncoder.encode(donor.getPassword()));
 
-        Donor createdDonor = donorService.createDonor(donor);
+        Donor createdDonor = donorService.createDonor(donor,file);
         return ResponseEntity.status(HttpStatus.OK).body(createdDonor);
     }
 

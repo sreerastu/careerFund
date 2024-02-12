@@ -3,14 +3,16 @@ package com.example.Foundation.service;
 import com.example.Foundation.exception.DonorNotFoundException;
 import com.example.Foundation.exception.InvalidDonorIdException;
 import com.example.Foundation.modal.Donor;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface DonorService {
 
 
 
-    Donor createDonor(Donor donor);
+    Donor createDonor(Donor donor, MultipartFile file) throws IOException;
 
     Donor updateDonor(int donorId, Donor donor) throws InvalidDonorIdException;
 

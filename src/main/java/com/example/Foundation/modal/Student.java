@@ -1,6 +1,7 @@
 package com.example.Foundation.modal;
 
 
+import com.example.Foundation.Enum.Course;
 import com.example.Foundation.Enum.Gender;
 import com.example.Foundation.Enum.UserType;
 
@@ -43,6 +44,14 @@ public class Student implements UserDetails {
     private Gender gender;
 
     private Boolean placed;
+
+    @Enumerated(EnumType.STRING)
+    private Course course;
+
+    private String description;
+
+    private String image;  // New field to store image path
+
     @Enumerated(EnumType.STRING)
     private UserType userType;
 

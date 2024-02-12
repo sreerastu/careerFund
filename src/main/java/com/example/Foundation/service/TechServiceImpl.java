@@ -4,6 +4,7 @@ import com.example.Foundation.modal.Technologies;
 import com.example.Foundation.repositories.TechnologiesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
@@ -14,39 +15,29 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class TechServiceImpl {
+    private static String UPLOADS_DIR = "./src/main/resources/static/uploads/";
 
     @Autowired
     private TechnologiesRepository technologiesRepository;
 
-    public Technologies saveImage(Technologies technologies) {
-        try {
-            byte[] compressedImageBytes = compressImage(technologies.getImage());
-            technologies.setImage(compressedImageBytes);
-            return technologiesRepository.save(technologies);
-        } catch (IOException e) {
-            e.printStackTrace();
-            // Handle exception
-            return null;
+    public Technologies saveTechnology(Technologies technologies, MultipartFile file) throws IOException {
+        if (file != null && !file.isEmpty()) {
+            // Save image file to uploads directory
+            String fileName = file.getOriginalFilename();
+            assert fileName != null;
+            Path path = Paths.get(UPLOADS_DIR + fileName);
+            Files.write(path, file.getBytes());
+            technologies.setImage(fileName);
         }
-    }
-
-    public Optional<Technologies> getImageById(int id) {
-        Optional<Technologies> technologiesOptional = technologiesRepository.findById(id);
-        technologiesOptional.ifPresent(tech -> {
-            try {
-                byte[] compressedImageBytes = compressImage(tech.getImage());
-                tech.setImage(compressedImageBytes);
-            } catch (IOException e) {
-                e.printStackTrace();
-                // Handle exception
-            }
-        });
-        return technologiesOptional;
+            return technologiesRepository.save(technologies);
     }
 
     public List<Technologies> getAllTechnologies() {
@@ -54,32 +45,23 @@ public class TechServiceImpl {
         return all;
     }
 
-    public byte[] compressImage(byte[] originalImageBytes) throws IOException {
-        // Convert the byte array to a BufferedImage
-        ByteArrayInputStream bis = new ByteArrayInputStream(originalImageBytes);
-        BufferedImage bufferedImage = ImageIO.read(bis);
-
-        // Create a ByteArrayOutputStream to write the compressed image
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-
-        // Compress the image
-        ImageWriter writer = ImageIO.getImageWritersByFormatName("jpg").next();
-        ImageWriteParam param = writer.getDefaultWriteParam();
-        param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
-        param.setCompressionQuality(0.5f); // Adjust the quality as needed
-
-        try (ImageOutputStream ios = ImageIO.createImageOutputStream(bos)) {
-            writer.setOutput(ios);
-            writer.write(null, new IIOImage(bufferedImage, null, null), param);
+    public Technologies updateTechnology(int techId, Technologies technologies) throws IOException {
+        Optional<Technologies> optionalArticle = technologiesRepository.findById(techId);
+        if (optionalArticle.isPresent()) {
+            Technologies existingTech = optionalArticle.get();
+            existingTech.setCertification(technologies.getCertification());
+            existingTech.setTechTitle(technologies.getTechTitle());
+            if (technologies.getImage() != null) {
+                existingTech.setImage(technologies.getImage());
+            }
+            return technologiesRepository.save(existingTech);
+        } else {
+            throw new IllegalArgumentException("Article not found with ID: " + techId);
         }
+    }
 
-        // Get the compressed image bytes
-        byte[] compressedImageBytes = bos.toByteArray();
-
-        // Close streams
-        bis.close();
-        bos.close();
-
-        return compressedImageBytes;
+    public Technologies getTechnologyById(int techId){
+        Technologies tech =technologiesRepository.findById(techId).orElseThrow(()->new RuntimeException("technology not found"));
+        return tech;
     }
 }

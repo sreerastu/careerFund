@@ -8,8 +8,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -25,9 +27,9 @@ public class TrainerController {
 
 
     @PostMapping("/register/trainer")
-    public ResponseEntity<?> createTrainer(@Valid @RequestBody Trainer trainer) {
+    public ResponseEntity<?> createTrainer(@Valid @ModelAttribute Trainer trainer,@RequestParam(required = false) MultipartFile file) throws IOException {
         trainer.setPassword(this.bCryptPasswordEncoder.encode(trainer.getPassword()));
-        Trainer createdTrainer = trainerService.createTrainer(trainer);
+        Trainer createdTrainer = trainerService.createTrainer(trainer,file);
         return ResponseEntity.status(HttpStatus.OK).body(createdTrainer);
     }
 

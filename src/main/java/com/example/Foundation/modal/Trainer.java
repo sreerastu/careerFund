@@ -45,6 +45,8 @@ public class Trainer implements UserDetails {
     @Enumerated(EnumType.STRING)
     private UserType userType;
 
+    private String image;
+
 
     @ManyToOne
     @JoinColumn(name = "student_id")

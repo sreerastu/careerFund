@@ -29,9 +29,9 @@ public class StudentController {
 
 
     @PostMapping("/register/student")
-    public ResponseEntity<?> createStudent(@Valid @RequestBody Student student) {
+    public ResponseEntity<?> createStudent(@Valid @ModelAttribute Student student, @RequestParam(required = false) MultipartFile file) throws IOException {
         student.setPassword(this.bCryptPasswordEncoder.encode(student.getPassword()));
-        Student createdStudent = studentService.createStudent(student);
+        Student createdStudent = studentService.createStudent(student,file);
         return ResponseEntity.status(HttpStatus.OK).body(createdStudent);
     }
 

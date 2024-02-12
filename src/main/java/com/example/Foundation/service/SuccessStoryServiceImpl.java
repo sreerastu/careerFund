@@ -10,10 +10,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @Service
 public class SuccessStoryServiceImpl {
+
+    private static String UPLOADS_DIR = "./src/main/resources/static/uploads/";
 
     @Autowired
     private StudentServiceImpl studentService;
@@ -21,15 +26,19 @@ public class SuccessStoryServiceImpl {
     @Autowired
     private SuccessStoryRepository successStoryRepository;
 
-    public SuccessStories createSuccessStory(SuccessStories successStories, int studentId, MultipartFile imageFile) throws InvalidStudentIdException, IOException {
+    public SuccessStories createSuccessStory(SuccessStories successStories, int studentId, MultipartFile file) throws InvalidStudentIdException, IOException {
 
         Student student = studentService.getStudentById(studentId);
-        if (student != null && student.getPlaced() != null && student.getPlaced() && student.getSuccessStories() == null && imageFile !=null) {
+        if (student != null && student.getPlaced() != null && file != null && !file.isEmpty()) {
             successStories.setStudent(student);
-            successStories.setImage(imageFile.getBytes());
+            String fileName = file.getOriginalFilename();
+            assert fileName != null;
+            Path path = Paths.get(UPLOADS_DIR + fileName);
+            Files.write(path, file.getBytes());
+            successStories.setImage(fileName);
             return successStoryRepository.save(successStories);
         } else {
-            throw new IllegalStateException("Cannot create success story for non-placed student or student already has a success story.");
+            throw new IllegalStateException("Cannot create success story for non-placed student.");
         }
     }
 
@@ -50,5 +59,17 @@ public class SuccessStoryServiceImpl {
             throw new StudentNotFoundException("invalid vendorId passed");
         }
         return "Student Successfully deleted" + ssId;
+    }
+
+    public SuccessStories updateSuccessStories(int studentId, Student student) throws InvalidStudentIdException {
+        SuccessStories existingX = successStoryRepository.findById(student.getStudentId())
+                .orElseThrow(() -> new InvalidStudentIdException("Please enter a valid studentId"));
+
+        existingX.setStudent(student.getSuccessStories().getStudent());
+        existingX.setDescription(student.getSuccessStories().getDescription());
+        if (student.getImage() != null) {
+            existingX.setImage(student.getImage());
+        }
+        return successStoryRepository.save(existingX);
     }
 }

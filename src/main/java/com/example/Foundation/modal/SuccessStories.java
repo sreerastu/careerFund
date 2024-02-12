@@ -19,8 +19,9 @@ public class SuccessStories {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int ssId;
 
-    @Lob
-    private byte[] image;
+    private String title;
+
+    private String image;
 
     private String description;
 

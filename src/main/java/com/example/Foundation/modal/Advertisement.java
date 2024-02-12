@@ -27,7 +27,7 @@ public class Advertisement {
 
     private String emailAddress;
 
-    @Lob
-    private byte[] image;
+    private String image;  // New field to store image path
+
 
 }

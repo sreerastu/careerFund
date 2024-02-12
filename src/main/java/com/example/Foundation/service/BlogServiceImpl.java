@@ -1,9 +1,11 @@
 package com.example.Foundation.service;
 
+import com.example.Foundation.modal.Articles;
 import com.example.Foundation.modal.Blog;
 import com.example.Foundation.repositories.BlogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
@@ -14,16 +16,29 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class BlogServiceImpl {
 
+    private static String UPLOADS_DIR = "./src/main/resources/static/uploads/";
+
     @Autowired
     private BlogRepository blogRepository;
 
-    public Blog saveBlog(Blog blog) {
+    public Blog saveBlog(Blog blog, MultipartFile file) throws IOException {
+        if (file != null && !file.isEmpty()) {
+            // Save image file to uploads directory
+            String fileName = file.getOriginalFilename();
+            assert fileName != null;
+            Path path = Paths.get(UPLOADS_DIR + fileName);
+            Files.write(path, file.getBytes());
+            blog.setImage(fileName);
+        }
         return blogRepository.save(blog);
     }
 
@@ -35,33 +50,19 @@ public class BlogServiceImpl {
         return blogRepository.findAll();
     }
 
-    public byte[] compressImage(byte[] originalImageBytes) throws IOException {
-        // Convert the byte array to a BufferedImage
-        ByteArrayInputStream bis = new ByteArrayInputStream(originalImageBytes);
-        BufferedImage bufferedImage = ImageIO.read(bis);
-
-        // Create a ByteArrayOutputStream to write the compressed image
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-
-        // Compress the image
-        ImageWriter writer = ImageIO.getImageWritersByFormatName("jpg").next();
-        ImageWriteParam param = writer.getDefaultWriteParam();
-        param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
-        param.setCompressionQuality(0.5f); // Adjust the quality as needed
-
-        try (ImageOutputStream ios = ImageIO.createImageOutputStream(bos)) {
-            writer.setOutput(ios);
-            writer.write(null, new IIOImage(bufferedImage, null, null), param);
+    public Blog updateBlog(int blogId, Blog blog) throws IOException {
+        Optional<Blog> optionalArticle = blogRepository.findById(blogId);
+        if (optionalArticle.isPresent()) {
+            Blog existingBlog = optionalArticle.get();
+            existingBlog.setTitle(blog.getTitle());
+            existingBlog.setDescription(blog.getDescription());
+            if (blog.getImage() != null) {
+                blog.setImage(blog.getImage());
+            }
+            return blogRepository.save(existingBlog);
+        } else {
+            throw new IllegalArgumentException("Article not found with ID: " + blogId);
         }
-
-        // Get the compressed image bytes
-        byte[] compressedImageBytes = bos.toByteArray();
-
-        // Close streams
-        bis.close();
-        bos.close();
-
-        return compressedImageBytes;
     }
 
 }

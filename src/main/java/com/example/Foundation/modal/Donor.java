@@ -42,6 +42,8 @@ public class Donor implements UserDetails {
     @Enumerated(EnumType.STRING)
     private UserType userType;
 
+    private String image;
+
 
     @OneToMany(mappedBy = "donor", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonIgnore

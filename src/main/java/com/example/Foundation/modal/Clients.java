@@ -26,8 +26,8 @@ public class Clients {
 
     @Size(min = 10, max = 10, message = "Contact number must be 10 digits")
     private String contactNumber;
-    @Lob
-    private byte[] image;
+
+    private String image;  // New field to store image path
 
     private String description;
 

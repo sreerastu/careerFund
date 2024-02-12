@@ -20,8 +20,9 @@ public class Events {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int eventId;
 
-    @Lob
-    private byte[] image;
+    private String title;
+
+    private String image;
 
     private String description;
 

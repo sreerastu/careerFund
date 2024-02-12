@@ -20,8 +20,8 @@ public class Articles {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected int articleId;
     protected String title;
-    @Lob
-    private byte[] image;
+    private String image;  // New field to store image path
+
     private String description;
     private String categoryType;
 

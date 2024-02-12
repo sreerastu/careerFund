@@ -10,11 +10,18 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @Service
 public class AdminServiceImpl implements AdminService, UserDetailsService {
+
+    private static String UPLOADS_DIR = "./src/main/resources/static/uploads/";
 
     @Autowired
     private AdminRepository adminRepository;
@@ -24,7 +31,15 @@ public class AdminServiceImpl implements AdminService, UserDetailsService {
 
 
     @Override
-    public Admin createAdmin(Admin admin) {
+    public Admin createAdmin(Admin admin , MultipartFile file) throws IOException {
+        if (file != null && !file.isEmpty()) {
+            // Save image file to uploads directory
+            String fileName = file.getOriginalFilename();
+            assert fileName != null;
+            Path path = Paths.get(UPLOADS_DIR + fileName);
+            Files.write(path, file.getBytes());
+            admin.setImage(fileName);
+        }
         return adminRepository.save(admin);
     }
 
@@ -38,6 +53,9 @@ public class AdminServiceImpl implements AdminService, UserDetailsService {
         existingAdmin.setGender(admin.getGender());
         existingAdmin.setEmailAddress(admin.getEmailAddress());
         existingAdmin.setPassword(this.bCryptPasswordEncoder.encode(admin.getPassword()));
+        if (admin.getImage() != null) {
+            existingAdmin.setImage(admin.getImage());
+        }
         return adminRepository.save(existingAdmin);
     }
 

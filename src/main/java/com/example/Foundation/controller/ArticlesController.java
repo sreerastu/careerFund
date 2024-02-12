@@ -54,7 +54,7 @@ public class ArticlesController {
 
     @PutMapping("/{articleId}")
     public ResponseEntity<String> updateArticle(@PathVariable int articleId, @ModelAttribute Articles updatedArticle, @RequestParam(value = "image", required = false) MultipartFile image) throws IOException {
-        Articles updated = articlesService.updateArticle(articleId, updatedArticle, image);
+        Articles updated = articlesService.updateArticle(articleId, updatedArticle);
         return ResponseEntity.ok("Article updated with ID: " + updated.getArticleId());
     }
 

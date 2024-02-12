@@ -19,9 +19,9 @@ public class Blog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int bId;
+    private String title;
 
-    @Lob
-    private byte[] image;
+    private String image;  // New field to store image path
 
     private String description;
 
