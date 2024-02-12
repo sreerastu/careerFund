@@ -65,8 +65,8 @@ logging:
 
 #s3 configuration
 aws:
-  accessKeyId: AKIA6RMCQR3JL7JRAMFB
-  secretKey: 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
+  accessKeyId: AKIA6RMCQR3JJLZM6PHY
+  secretKey: 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
   region: eu-north-1
   s3:
     bucketName: careerfund-images
