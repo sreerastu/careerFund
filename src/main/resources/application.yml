@@ -8,7 +8,7 @@ jwt:
 #smtp configuration and database configuration
 spring:
   datasource:
-#    url: jdbc:postgresql://localhost:5432/AwsDB1
+#    url: jdbc:postgresql://localhost:5432/AwsDB
     url: jdbc:postgresql://database-1.crc20wkc223a.eu-north-1.rds.amazonaws.com:5432/AwsDB
     username: postgres
     password: mahesh$106
@@ -67,6 +67,6 @@ logging:
 aws:
   accessKeyId: AKIA6RMCQR3JL7JRAMFB
   secretKey: PM6MkUoyMv5LeOelOjGS4PkY1sLJZ7JKRg2aB3L9
-  region: your-bucket-region
+  region: eu-north-1
   s3:
     bucketName: careerfund-image
