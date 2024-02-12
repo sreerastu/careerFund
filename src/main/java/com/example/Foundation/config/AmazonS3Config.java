@@ -5,17 +5,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 
 @Configuration
 public class AmazonS3Config {
-
-    @Value("${aws.accessKeyId}")
-    private String accessKeyId;
-
-    @Value("${aws.secretKey}")
-    private String secretKey;
 
     @Value("${aws.region}")
     private String region;
@@ -25,11 +18,10 @@ public class AmazonS3Config {
 
     @Bean
     public AmazonS3 amazonS3Client() {
-        // Create Amazon S3 client
+        // Create Amazon S3 client using instance profile credentials
         return AmazonS3ClientBuilder.standard()
-                .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKeyId, secretKey)))
+                .withCredentials(DefaultAWSCredentialsProviderChain.getInstance())
                 .withRegion(region)
                 .build();
     }
-
 }
