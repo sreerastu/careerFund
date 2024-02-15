@@ -19,7 +19,7 @@ public class S3Service {
     @Autowired
     private AmazonS3 amazonS3;
 
-    @Value("${aws.s3.bucketName}")
+    @Value("${aws.s3.BucketName}")
     private String bucketName;
 
     public void uploadImageToS3(String folderName,String fileName ,MultipartFile file) throws IOException {

@@ -13,7 +13,7 @@ public class AmazonS3Config {
     @Value("${aws.region}")
     private String region;
 
-    @Value("${aws.s3.bucketName}")
+    @Value("${aws.s3.BucketName}")
     private String bucketName;
 
     @Bean

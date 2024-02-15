@@ -20,7 +20,7 @@ public class ClientsServiceImpl {
     @Autowired
     private S3Service s3Service; // Injecting the S3Service
 
-    @Value("${aws.s3.ClientsFolder}")
+    @Value("${aws.s3.ClientFolder}")
     private String folderName;
 
     public List<Clients> getAllClients() {
