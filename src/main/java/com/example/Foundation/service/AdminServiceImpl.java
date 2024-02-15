@@ -5,6 +5,7 @@ import com.example.Foundation.exception.InvalidAdminIdException;
 import com.example.Foundation.modal.Admin;
 import com.example.Foundation.repositories.AdminRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,8 +19,6 @@ import java.util.List;
 @Service
 public class AdminServiceImpl implements AdminService, UserDetailsService {
 
-    // private static String UPLOADS_DIR = "./src/main/resources/static/uploads/";
-
     @Autowired
     private AdminRepository adminRepository;
 
@@ -29,6 +28,9 @@ public class AdminServiceImpl implements AdminService, UserDetailsService {
     @Autowired
     private S3Service s3Service; // Injecting the S3Service
 
+    @Value("${aws.s3.AdminFolder}")
+    private String folderName;
+
 
     @Override
     public Admin createAdmin(Admin admin, MultipartFile file) throws IOException {
@@ -36,23 +38,48 @@ public class AdminServiceImpl implements AdminService, UserDetailsService {
             String fileName = file.getOriginalFilename();
             admin.setImage(fileName);
             // Upload the image to S3
-            s3Service.uploadImageToS3(fileName, file);
+            s3Service.uploadImageToS3(folderName,fileName, file);
         }
         return adminRepository.save(admin);
     }
 
     @Override
-    public Admin updateAdmin(int adminId, Admin admin) throws AdminNotFoundException {
+    public Admin updateAdmin(int adminId, Admin admin, MultipartFile file) throws AdminNotFoundException, IOException {
 
         Admin existingAdmin = adminRepository.findById(adminId).orElseThrow(() -> new AdminNotFoundException("Invalid adminId"));
-        existingAdmin.setFirstName(admin.getFirstName());
-        existingAdmin.setLastName(admin.getLastName());
-        existingAdmin.setContactNumber(admin.getContactNumber());
-        existingAdmin.setGender(admin.getGender());
-        existingAdmin.setEmailAddress(admin.getEmailAddress());
-        existingAdmin.setPassword(this.bCryptPasswordEncoder.encode(admin.getPassword()));
-        if (admin.getImage() != null) {
-            existingAdmin.setImage(admin.getImage());
+        if (admin.getFirstName() != null) {
+            existingAdmin.setFirstName(admin.getFirstName());
+        }
+        if (admin.getLastName() != null) {
+            existingAdmin.setLastName(admin.getLastName());
+        }
+        if (admin.getGender() != null) {
+            existingAdmin.setGender(admin.getGender());
+        }
+        if (admin.getEmailAddress() != null) {
+            existingAdmin.setEmailAddress(admin.getEmailAddress());
+        }
+        if (admin.getPassword() != null) {
+            existingAdmin.setPassword(this.bCryptPasswordEncoder.encode(admin.getPassword()));
+        }
+        if (admin.getContactNumber() != null) {
+            existingAdmin.setContactNumber(admin.getContactNumber());
+        }
+        if(admin.getUserType() !=null){
+            existingAdmin.setUserType(admin.getUserType());
+        }
+        if (file != null && !file.isEmpty()) {
+            String oldImageName = admin.getImage();
+            String newImageName = file.getOriginalFilename();
+            existingAdmin.setImage(newImageName);
+
+            // Upload new image to S3
+            s3Service.uploadImageToS3(folderName,newImageName, file);
+
+            // Delete the old image file from S3
+            if (oldImageName != null) {
+                s3Service.deleteImageFromS3(oldImageName);
+            }
         }
         return adminRepository.save(existingAdmin);
     }

@@ -5,6 +5,7 @@ import com.example.Foundation.exception.InvalidDonorIdException;
 import com.example.Foundation.modal.Donor;
 import com.example.Foundation.repositories.DonorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,14 +21,14 @@ public class DonorServiceImpl implements DonorService, UserDetailsService {
 
     @Autowired
     private S3Service s3Service; // Injecting the S3Service
-
-    //   private static String UPLOADS_DIR = "./src/main/resources/static/uploads/";
-
     @Autowired
     private DonorRepository donorRepository;
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Value("${aws.s3.DonorFolder}")
+    private String folderName;
 
     @Override
     public Donor createDonor(Donor donor, MultipartFile file) throws IOException {
@@ -35,26 +36,50 @@ public class DonorServiceImpl implements DonorService, UserDetailsService {
             String fileName = file.getOriginalFilename();
             donor.setImage(fileName);
             // Upload the image to S3
-            s3Service.uploadImageToS3(fileName, file);
+            s3Service.uploadImageToS3(folderName,fileName, file);
         }
 
         return donorRepository.save(donor);
     }
 
     @Override
-    public Donor updateDonor(int donorId, Donor donor) throws InvalidDonorIdException {
+    public Donor updateDonor(int donorId, Donor donor,MultipartFile file) throws InvalidDonorIdException, IOException {
         Donor existingDonor = donorRepository.findById(donor.getDonorId()).orElseThrow(() -> new InvalidDonorIdException("please enter a valid donorId"));
 
-        existingDonor.setFirstName(donor.getFirstName());
-        existingDonor.setLastName(donor.getLastName());
-        existingDonor.setGender(donor.getGender());
-        existingDonor.setContactNumber(donor.getContactNumber());
-        existingDonor.setEmailAddress(donor.getEmailAddress());
-        existingDonor.setPassword(this.bCryptPasswordEncoder.encode(donor.getPassword()));
-        if (donor.getImage() != null) {
-            existingDonor.setImage(donor.getImage());
+        if (donor.getFirstName() != null) {
+            existingDonor.setFirstName(donor.getFirstName());
         }
+        if (donor.getLastName() != null) {
+            existingDonor.setLastName(donor.getLastName());
+        }
+        if (donor.getGender() != null) {
+            existingDonor.setGender(donor.getGender());
+        }
+        if (donor.getEmailAddress() != null) {
+            existingDonor.setEmailAddress(donor.getEmailAddress());
+        }
+        if (donor.getPassword() != null) {
+            existingDonor.setPassword(this.bCryptPasswordEncoder.encode(donor.getPassword()));
+        }
+        if (donor.getContactNumber() != null) {
+            existingDonor.setContactNumber(donor.getContactNumber());
+        }
+        if(donor.getUserType() !=null){
+            existingDonor.setUserType(donor.getUserType());
+        }
+        if (file != null && !file.isEmpty()) {
+            String oldImageName = donor.getImage();
+            String newImageName = file.getOriginalFilename();
+            existingDonor.setImage(newImageName);
 
+            // Upload new image to S3
+            s3Service.uploadImageToS3(folderName,newImageName, file);
+
+            // Delete the old image file from S3
+            if (oldImageName != null) {
+                s3Service.deleteImageFromS3(oldImageName);
+            }
+        }
         return existingDonor;
     }
 

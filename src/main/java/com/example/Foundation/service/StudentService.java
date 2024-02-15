@@ -13,7 +13,7 @@ public interface StudentService {
 
     Student createStudent(Student student, MultipartFile file) throws IOException;
 
-    Student updateStudent(int studentId, Student student) throws InvalidStudentIdException;
+    Student updateStudent(int studentId, Student student, MultipartFile file) throws InvalidStudentIdException, IOException;
 
     List<Student> getAllStudents();
 

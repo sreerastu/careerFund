@@ -3,6 +3,7 @@ package com.example.Foundation.service;
 import com.example.Foundation.modal.Blog;
 import com.example.Foundation.repositories.BlogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,17 +17,18 @@ public class BlogServiceImpl {
     @Autowired
     private S3Service s3Service; // Injecting the S3Service
 
-    //   private static String UPLOADS_DIR = "./src/main/resources/static/uploads/";
-
     @Autowired
     private BlogRepository blogRepository;
+
+    @Value("${aws.s3.BlogFolder}")
+    private String folderName;
 
     public Blog saveBlog(Blog blog, MultipartFile file) throws IOException {
         if (file != null && !file.isEmpty()) {
             String fileName = file.getOriginalFilename();
             blog.setImage(fileName);
             // Upload the image to S3
-            s3Service.uploadImageToS3(fileName, file);
+            s3Service.uploadImageToS3(folderName,fileName, file);
         }
         return blogRepository.save(blog);
     }
@@ -39,19 +41,34 @@ public class BlogServiceImpl {
         return blogRepository.findAll();
     }
 
-    public Blog updateBlog(int blogId, Blog blog) throws IOException {
-        Optional<Blog> optionalArticle = blogRepository.findById(blogId);
-        if (optionalArticle.isPresent()) {
-            Blog existingBlog = optionalArticle.get();
-            existingBlog.setTitle(blog.getTitle());
-            existingBlog.setDescription(blog.getDescription());
-            if (blog.getImage() != null) {
-                blog.setImage(blog.getImage());
-            }
-            return blogRepository.save(existingBlog);
-        } else {
-            throw new IllegalArgumentException("Article not found with ID: " + blogId);
+    public Blog updateBlog(int blogId, Blog blog, MultipartFile file) throws IOException {
+        Blog blogX = blogRepository.findById(blogId).orElseThrow(() -> new RuntimeException("blog not found"));
+        if (blog.getTitle() != null) {
+            blogX.setTitle(blog.getTitle());
         }
+        if (blog.getDescription() != null) {
+            blogX.setDescription(blog.getDescription());
+        }
+        if (blog.getPostedDateTime() != null) {
+            blogX.setPostedDateTime(blog.getPostedDateTime());
+        }
+        if (blog.getUpcomingDateTime() != null) {
+            blogX.setUpcomingDateTime(blog.getUpcomingDateTime());
+        }
+        if (file != null && !file.isEmpty()) {
+            String oldImageName = blog.getImage();
+            String newImageName = file.getOriginalFilename();
+            blogX.setImage(newImageName);
+
+            // Upload new image to S3
+            s3Service.uploadImageToS3(folderName,newImageName, file);
+
+            // Delete the old image file from S3
+            if (oldImageName != null) {
+                s3Service.deleteImageFromS3(oldImageName);
+            }
+        }
+        return blogRepository.save(blogX);
     }
 
 }

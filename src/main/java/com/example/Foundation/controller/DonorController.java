@@ -34,9 +34,9 @@ public class DonorController {
         return ResponseEntity.status(HttpStatus.OK).body(createdDonor);
     }
 
-    @PutMapping("/donor/{donorId}")
-    public ResponseEntity<?> updateDonor(@PathVariable int donorId, @RequestBody Donor donorX) throws InvalidDonorIdException {
-        Donor donor = donorService.updateDonor(donorId, donorX);
+    @PatchMapping("/donor/{donorId}")
+    public ResponseEntity<?> updateDonor(@PathVariable int donorId, @RequestBody Donor donorX, @RequestParam(required = false) MultipartFile file) throws InvalidDonorIdException, IOException {
+        Donor donor = donorService.updateDonor(donorId, donorX,file);
         return ResponseEntity.status(HttpStatus.OK).body(donor);
     }
 

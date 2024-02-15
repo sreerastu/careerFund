@@ -11,7 +11,7 @@ public interface TrainerService {
 
     Trainer createTrainer(Trainer trainer, MultipartFile file) throws IOException;
 
-    Trainer updateTrainer(int trainerId, Trainer trainer) throws TrainerNotFoundException;
+    Trainer updateTrainer(int trainerId, Trainer trainer,MultipartFile file) throws TrainerNotFoundException, IOException;
 
     List<Trainer> getAllTrainers();
 

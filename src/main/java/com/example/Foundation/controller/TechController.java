@@ -25,6 +25,11 @@ public class TechController {
         return ResponseEntity.status(HttpStatus.OK).body(technologiesX);
     }
 
+    @PatchMapping("/{techIdId}")
+    public ResponseEntity<?> updateArticle(@PathVariable int techId, @ModelAttribute Technologies technologies,  @RequestParam(required = false) MultipartFile file) throws IOException {
+        Technologies updated = techService.updateTechnology(techId, technologies,file);
+        return ResponseEntity.status(HttpStatus.OK).body(updated);
+    }
     @GetMapping("/{techId}")
     public ResponseEntity<?> getTechnology(@PathVariable int techId) {
         Technologies tech = techService.getTechnologyById(techId);

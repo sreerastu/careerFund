@@ -1,7 +1,6 @@
 package com.example.Foundation.controller;
 
 import com.example.Foundation.exception.InvalidStudentIdException;
-import com.example.Foundation.modal.Student;
 import com.example.Foundation.modal.SuccessStories;
 import com.example.Foundation.service.SuccessStoryServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,13 +23,13 @@ public class SuccessStoryController {
     public ResponseEntity<?> createSuccessStory(@ModelAttribute SuccessStories successStories,
                                                 @RequestParam int studentId,
                                                 @RequestParam(required = false) MultipartFile file) throws InvalidStudentIdException, IOException {
-        SuccessStories stories = successStoryService.createSuccessStory(successStories,studentId,file);
+        SuccessStories stories = successStoryService.createSuccessStory(successStories, studentId, file);
         return ResponseEntity.status(HttpStatus.OK).body(stories);
     }
 
-    @PutMapping("/update/{studentId}")
-    public ResponseEntity<?> updateStudent(@PathVariable int studentId, @ModelAttribute Student studentX) throws InvalidStudentIdException {
-        SuccessStories stories = successStoryService.updateSuccessStories(studentId, studentX);
+    @PatchMapping("/update/{studentId}")
+    public ResponseEntity<?> updateStudent(@PathVariable int studentId, @ModelAttribute SuccessStories successStories, @RequestParam(required = false) MultipartFile file) throws InvalidStudentIdException, IOException {
+        SuccessStories stories = successStoryService.updateSuccessStories(studentId, successStories, file);
         return ResponseEntity.status(HttpStatus.OK).body(stories);
     }
 

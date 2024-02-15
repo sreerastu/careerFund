@@ -11,6 +11,7 @@ import com.example.Foundation.repositories.StudentRepository;
 import com.example.Foundation.repositories.TrainerRepository;
 import com.example.Foundation.util.JWTUtility;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -27,8 +28,6 @@ public class StudentServiceImpl implements StudentService, UserDetailsService {
 
     @Autowired
     private S3Service s3Service; // Injecting the S3Service
-
-    //   private static String UPLOADS_DIR = "./src/main/resources/static/uploads/";
 
     @Autowired
     private StudentRepository studentRepository;
@@ -48,31 +47,62 @@ public class StudentServiceImpl implements StudentService, UserDetailsService {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    @Value("${aws.s3.StudentFolder}")
+    private String folderName;
+
     @Override
     public Student createStudent(Student student, MultipartFile file) throws IOException {
         if (file != null && !file.isEmpty()) {
             String fileName = file.getOriginalFilename();
             student.setImage(fileName);
             // Upload the image to S3
-            s3Service.uploadImageToS3(fileName, file);
+            s3Service.uploadImageToS3(folderName,fileName, file);
         }
         return studentRepository.save(student);
     }
 
-    public Student updateStudent(int studentId, Student student) throws InvalidStudentIdException {
+    public Student updateStudent(int studentId, Student student, MultipartFile file) throws InvalidStudentIdException, IOException {
         Student existingStudent = studentRepository.findById(student.getStudentId())
                 .orElseThrow(() -> new InvalidStudentIdException("Please enter a valid studentId"));
 
-        existingStudent.setFirstName(student.getFirstName());
-        existingStudent.setLastName(student.getLastName());
-        existingStudent.setGender(student.getGender());
-        existingStudent.setCourse(student.getCourse());
-        existingStudent.setEmailAddress(student.getEmailAddress());
-        existingStudent.setPassword(this.bCryptPasswordEncoder.encode(student.getPassword()));
-        existingStudent.setContactNumber(student.getContactNumber());
-        if (student.getImage() != null) {
-            existingStudent.setImage(student.getImage());
+        if (student.getFirstName() != null) {
+            existingStudent.setFirstName(student.getFirstName());
         }
+        if (student.getLastName() != null) {
+            existingStudent.setLastName(student.getLastName());
+        }
+        if (student.getGender() != null) {
+            existingStudent.setGender(student.getGender());
+        }
+        if (student.getCourse() != null) {
+            existingStudent.setCourse(student.getCourse());
+        }
+        if (student.getEmailAddress() != null) {
+            existingStudent.setEmailAddress(student.getEmailAddress());
+        }
+        if (student.getPassword() != null) {
+            existingStudent.setPassword(this.bCryptPasswordEncoder.encode(student.getPassword()));
+        }
+        if (student.getContactNumber() != null) {
+            existingStudent.setContactNumber(student.getContactNumber());
+        }
+        if(student.getUserType() !=null){
+            existingStudent.setUserType(student.getUserType());
+        }
+        if (file != null && !file.isEmpty()) {
+            String oldImageName = student.getImage();
+            String newImageName = file.getOriginalFilename();
+            existingStudent.setImage(newImageName);
+
+            // Upload new image to S3
+            s3Service.uploadImageToS3(folderName,newImageName, file);
+
+            // Delete the old image file from S3
+            if (oldImageName != null) {
+                s3Service.deleteImageFromS3(oldImageName);
+            }
+        }
+
         return studentRepository.save(existingStudent);
     }
 

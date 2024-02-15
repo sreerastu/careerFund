@@ -52,9 +52,9 @@ public class ArticlesController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/{articleId}")
-    public ResponseEntity<String> updateArticle(@PathVariable int articleId, @ModelAttribute Articles updatedArticle, @RequestParam(value = "image", required = false) MultipartFile image) throws IOException {
-        Articles updated = articlesService.updateArticle(articleId, updatedArticle);
+    @PatchMapping("/{articleId}")
+    public ResponseEntity<String> updateArticle(@PathVariable int articleId, @ModelAttribute Articles updatedArticle,  @RequestParam(required = false) MultipartFile file) throws IOException {
+        Articles updated = articlesService.updateArticle(articleId, updatedArticle,file);
         return ResponseEntity.ok("Article updated with ID: " + updated.getArticleId());
     }
 

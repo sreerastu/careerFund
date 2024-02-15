@@ -67,4 +67,18 @@ logging:
 aws:
   region: eu-north-1
   s3:
-    bucketName: careerfund-images
+    BucketName: careerfund-images/
+    AdminFolder: Admin_images
+    ArticleFolder: Articles_images
+    BlogFolder: Blog_images
+    ClientFolder: Client_images
+    DonorFolder: Donor_images
+    EventsFolder: Events_images
+    StudentFolder: Student_images
+    SuccessStoriesFolder: SuccessStories_images
+    TechnologiesFolder: Technologies_images
+    TrainerFolder: Trainer_images
+    AdvertisementFolder: Advertisement_images
+
+
+

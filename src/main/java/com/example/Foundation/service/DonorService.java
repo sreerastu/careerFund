@@ -14,7 +14,7 @@ public interface DonorService {
 
     Donor createDonor(Donor donor, MultipartFile file) throws IOException;
 
-    Donor updateDonor(int donorId, Donor donor) throws InvalidDonorIdException;
+    Donor updateDonor(int donorId, Donor donor,MultipartFile file) throws InvalidDonorIdException, IOException;
 
     List<Donor> getAllDonors();
 

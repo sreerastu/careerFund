@@ -3,6 +3,7 @@ package com.example.Foundation.service;
 import com.example.Foundation.modal.Clients;
 import com.example.Foundation.repositories.ClientsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,6 +20,9 @@ public class ClientsServiceImpl {
     @Autowired
     private S3Service s3Service; // Injecting the S3Service
 
+    @Value("${aws.s3.ClientsFolder}")
+    private String folderName;
+
     public List<Clients> getAllClients() {
         return clientsRepository.findAll();
     }
@@ -32,7 +36,7 @@ public class ClientsServiceImpl {
             String fileName = file.getOriginalFilename();
             client.setImage(fileName);
             // Upload the image to S3
-            s3Service.uploadImageToS3(fileName, file);
+            s3Service.uploadImageToS3(folderName,fileName, file);
         }
         return clientsRepository.save(client);
     }
@@ -63,7 +67,7 @@ public class ClientsServiceImpl {
                 existingClient.setImage(newImageName);
 
                 // Upload new image to S3
-                s3Service.uploadImageToS3(newImageName, file);
+                s3Service.uploadImageToS3(folderName,newImageName, file);
 
                 // Delete the old image file from S3
                 if (oldImageName != null) {

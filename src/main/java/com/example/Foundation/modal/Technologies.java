@@ -25,6 +25,5 @@ public class Technologies {
 
     private String image;
 
-
-    private String certification;
+    private String description;
 }

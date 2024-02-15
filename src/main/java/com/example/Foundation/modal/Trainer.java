@@ -42,6 +42,8 @@ public class Trainer implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Course course;
 
+    private String certification;
+
     @Enumerated(EnumType.STRING)
     private UserType userType;
 

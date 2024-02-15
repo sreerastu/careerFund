@@ -5,6 +5,7 @@ import com.example.Foundation.exception.TrainerNotFoundException;
 import com.example.Foundation.modal.Trainer;
 import com.example.Foundation.repositories.TrainerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -28,41 +29,71 @@ public class TrainerServiceImpl implements TrainerService, UserDetailsService {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    //  private static String UPLOADS_DIR = "./src/main/resources/static/uploads/";
 
+    @Value("${aws.s3.TrainerFolder}")
+    private String folderName;
 
     @Override
     public Trainer createTrainer(Trainer trainer, MultipartFile file) throws IOException {
         if (file != null && !file.isEmpty()) {
-            String fileName = file.getOriginalFilename();
-            trainer.setImage(fileName);
+            String filename = file.getOriginalFilename();
+            trainer.setImage(filename);
             // Upload the image to S3
-            s3Service.uploadImageToS3(fileName, file);
+            s3Service.uploadImageToS3(folderName, filename, file);
         }
         return trainerRepository.save(trainer);
     }
 
     @Override
-    public Trainer updateTrainer(int trainerId, Trainer trainer) throws TrainerNotFoundException {
+    public Trainer updateTrainer(int trainerId, Trainer trainer, MultipartFile file) throws TrainerNotFoundException, IOException {
 
         Trainer existingTrainer = trainerRepository.findById(trainer.getTrainerId()).orElseThrow(() -> new TrainerNotFoundException("Invalid TrainerId"));
-        existingTrainer.setFirstName(trainer.getFirstName());
-        existingTrainer.setLastName(trainer.getLastName());
-        existingTrainer.setContactNumber(trainer.getContactNumber());
-        existingTrainer.setEmailAddress(trainer.getEmailAddress());
-        existingTrainer.setPassword(this.bCryptPasswordEncoder.encode(trainer.getPassword()));
-        existingTrainer.setCourse(trainer.getCourse());
-        existingTrainer.setGender(trainer.getGender());
-        if (trainer.getImage() != null) {
-            existingTrainer.setImage(trainer.getImage());
+        if (trainer.getFirstName() != null) {
+            existingTrainer.setFirstName(trainer.getFirstName());
+        }
+        if (trainer.getLastName() != null) {
+            existingTrainer.setLastName(trainer.getLastName());
+        }
+        if (trainer.getGender() != null) {
+            existingTrainer.setGender(trainer.getGender());
+        }
+        if (trainer.getCourse() != null) {
+            existingTrainer.setCourse(trainer.getCourse());
+        }
+        if (trainer.getEmailAddress() != null) {
+            existingTrainer.setEmailAddress(trainer.getEmailAddress());
+        }
+        if (trainer.getPassword() != null) {
+            existingTrainer.setPassword(this.bCryptPasswordEncoder.encode(trainer.getPassword()));
+        }
+        if (trainer.getContactNumber() != null) {
+            existingTrainer.setContactNumber(trainer.getContactNumber());
+        }
+        if (trainer.getUserType() != null) {
+            existingTrainer.setUserType(trainer.getUserType());
         }
 
+        if (trainer.getCertification() != null) {
+            existingTrainer.setCertification(trainer.getCertification());
+        }
+        if (file != null && !file.isEmpty()) {
+            String oldImageName = trainer.getImage();
+            String newImageName = file.getOriginalFilename();
+            existingTrainer.setImage(newImageName);
+
+            // Upload new image to S3
+            s3Service.uploadImageToS3(newImageName, newImageName, file);
+
+            // Delete the old image file from S3
+            if (oldImageName != null) {
+                s3Service.deleteImageFromS3(oldImageName);
+            }
+        }
         return existingTrainer;
     }
 
     @Override
     public List<Trainer> getAllTrainers() {
-
         List<Trainer> trainers = trainerRepository.findAll();
         return trainers;
     }

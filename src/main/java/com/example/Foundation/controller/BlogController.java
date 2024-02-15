@@ -32,6 +32,12 @@ public class BlogController {
         return ResponseEntity.status(HttpStatus.OK).body(blogs);
     }
 
+    @PatchMapping("/update/{blogId}")
+    public ResponseEntity<String> updateBlog(@PathVariable int blogId, @ModelAttribute Blog blog, @RequestParam(required = false) MultipartFile file) throws IOException {
+        Blog updated = blogService.updateBlog(blogId, blog, file);
+        return ResponseEntity.ok("Article updated with ID: " + updated.getBId());
+    }
+
     @GetMapping("/all")
     public ResponseEntity<List<Blog>> getAllBlogs() {
         List<Blog> allTechnologies = blogService.getAllBlogs();

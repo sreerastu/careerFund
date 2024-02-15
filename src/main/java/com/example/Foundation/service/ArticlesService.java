@@ -3,6 +3,7 @@ package com.example.Foundation.service;
 import com.example.Foundation.modal.Articles;
 import com.example.Foundation.repositories.ArticlesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,7 +16,8 @@ public class ArticlesService {
     @Autowired
     private S3Service s3Service; // Injecting the S3Service
 
-    //  private static String UPLOADS_DIR = "./src/main/resources/static/uploads/";
+    @Value("${aws.s3.ArticleFolder}")
+    private String folderName;
 
     private final ArticlesRepository articlesRepository;
 
@@ -28,7 +30,7 @@ public class ArticlesService {
             String fileName = file.getOriginalFilename();
             article.setImage(fileName);
             // Upload the image to S3
-            s3Service.uploadImageToS3(fileName, file);
+            s3Service.uploadImageToS3(folderName,fileName, file);
         }
         return articlesRepository.save(article);
     }
@@ -41,20 +43,32 @@ public class ArticlesService {
         return articlesRepository.findById(articleId);
     }
 
-    public Articles updateArticle(int articleId, Articles updatedArticle) throws IOException {
-        Optional<Articles> optionalArticle = articlesRepository.findById(articleId);
-        if (optionalArticle.isPresent()) {
-            Articles existingArticle = optionalArticle.get();
-            existingArticle.setTitle(updatedArticle.getTitle());
-            existingArticle.setDescription(updatedArticle.getDescription());
-            existingArticle.setCategoryType(updatedArticle.getCategoryType());
-            if (updatedArticle.getImage() != null) {
-                existingArticle.setImage(updatedArticle.getImage());
-            }
-            return articlesRepository.save(existingArticle);
-        } else {
-            throw new IllegalArgumentException("Article not found with ID: " + articleId);
+    public Articles updateArticle(int articleId, Articles articles, MultipartFile file) throws IOException {
+        Articles articlesX = articlesRepository.findById(articleId).orElseThrow(() ->new RuntimeException("article not found"));
+        if (articles.getTitle() != null) {
+            articlesX.setTitle(articles.getTitle());
         }
+        if (articles.getDescription() != null) {
+            articlesX.setDescription(articles.getDescription());
+        }
+        if (articles.getCategoryType() != null) {
+            articlesX.setCategoryType(articles.getTitle());
+        }
+
+        if (file != null && !file.isEmpty()) {
+            String oldImageName = articles.getImage();
+            String newImageName = file.getOriginalFilename();
+            articlesX.setImage(newImageName);
+
+            // Upload new image to S3
+            s3Service.uploadImageToS3(folderName,newImageName, file);
+
+            // Delete the old image file from S3
+            if (oldImageName != null) {
+                s3Service.deleteImageFromS3(oldImageName);
+            }
+        }
+        return articlesRepository.save(articlesX);
     }
 
     public void deleteArticle(int articleId) {

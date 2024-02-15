@@ -5,8 +5,6 @@ import com.example.Foundation.exception.AdminNotFoundException;
 import com.example.Foundation.exception.InvalidAdminIdException;
 import com.example.Foundation.modal.Admin;
 import com.example.Foundation.service.AdminServiceImpl;
-import com.example.Foundation.service.EmailService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,19 +30,18 @@ public class AdminController {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
-
     @PostMapping("/register/admin")
-    public ResponseEntity<?> createAdmin(@Valid @ModelAttribute Admin admin,@RequestParam(required = false) MultipartFile file) throws IOException {
+    public ResponseEntity<?> createAdmin(@Valid @ModelAttribute Admin admin, @RequestParam(required = false) MultipartFile file) throws IOException {
         admin.setPassword(this.bCryptPasswordEncoder.encode(admin.getPassword()));
 
-        Admin createdAdmin = adminService.createAdmin(admin,file);
-        log.info("admin created" +":"+ createdAdmin);
+        Admin createdAdmin = adminService.createAdmin(admin, file);
+        log.info("admin created" + ":" + createdAdmin);
         return ResponseEntity.status(HttpStatus.OK).body(createdAdmin);
     }
 
-    @PutMapping("/admin/{adminId}")
-    public ResponseEntity<?> updateAdmin(@PathVariable int adminId, @RequestBody Admin adminX) throws AdminNotFoundException {
-        Admin admin = adminService.updateAdmin(adminId, adminX);
+    @PatchMapping("/admin/{adminId}")
+    public ResponseEntity<?> updateAdmin(@PathVariable int adminId, @ModelAttribute Admin adminX, @RequestParam(required = false) MultipartFile file) throws AdminNotFoundException, IOException {
+        Admin admin = adminService.updateAdmin(adminId, adminX, file);
         return ResponseEntity.status(HttpStatus.OK).body(admin);
 
     }

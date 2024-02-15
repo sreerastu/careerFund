@@ -22,10 +22,10 @@ public class S3Service {
     @Value("${aws.s3.bucketName}")
     private String bucketName;
 
-    public void uploadImageToS3(String fileName, MultipartFile file) throws IOException {
+    public void uploadImageToS3(String folderName,String fileName ,MultipartFile file) throws IOException {
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(file.getSize());
-        amazonS3.putObject(new PutObjectRequest(bucketName, fileName, file.getInputStream(), metadata));
+        amazonS3.putObject(new PutObjectRequest(bucketName, folderName + "/" + fileName, file.getInputStream(), metadata));
     }
 
     public void deleteImageFromS3(String imageName) {

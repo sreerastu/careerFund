@@ -13,7 +13,7 @@ public interface AdminService {
 
     Admin createAdmin(Admin admin, MultipartFile file) throws IOException;
 
-    Admin updateAdmin(int adminId, Admin admin) throws AdminNotFoundException;
+    Admin updateAdmin(int adminId, Admin admin, MultipartFile file) throws AdminNotFoundException, IOException;
 
     List<Admin> getAllAdmins();
 
