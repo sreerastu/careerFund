@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TrainerServiceImpl implements TrainerService, UserDetailsService {
@@ -127,6 +128,17 @@ public class TrainerServiceImpl implements TrainerService, UserDetailsService {
     @Override
     public Trainer getTrainerByEmail(String emailAddress) {
         return trainerRepository.findByEmailAddress(emailAddress);
+    }
+
+
+
+    public List<Trainer> getAllTopTrainers() {
+        List<Trainer> list = trainerRepository.findAll();
+        List<Trainer> sortedList = list.stream()
+                .sorted() // Sort by Payment amount in descending order
+                .limit(10) // Limit to the top 10 payments
+                .collect(Collectors.toList());
+        return sortedList;
     }
 
     @Override
