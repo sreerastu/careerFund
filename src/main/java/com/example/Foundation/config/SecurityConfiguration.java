@@ -41,7 +41,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .disable()
                 .authorizeRequests()
                 .antMatchers("/api/authenticate", "/api/register/**", "/api/donors", "/api/stories",
-                        "/api/technologies/all", "/api/blogs/all", "/api/payments", "/api/topPayments", "/api/articles/all", "/clients/all", "/api/students", "/api/trainers")
+                        "/api/technologies/all", "/api/blogs/all", "/api/payments", "/api/topPayments", "/api/articles/all", "/clients/all", "/api/students", "/api/trainers", "/contactus/add", "/contactus/all")
                 .permitAll().antMatchers(AUTH_WHITELIST).permitAll()
                 .anyRequest()
                 .authenticated()
