@@ -34,9 +34,9 @@ public class TrainerController {
     }
 
 
-    @PutMapping("/trainer/{trainerId}")
+    @PatchMapping("/trainer/{trainerId}")
     public ResponseEntity<?> updateVendor(@PathVariable int trainerId,
-                                          @RequestBody Trainer trainerX, @RequestParam(required = false) MultipartFile file) throws TrainerNotFoundException, IOException {
+                                          @ModelAttribute Trainer trainerX, @RequestParam(required = false) MultipartFile file) throws TrainerNotFoundException, IOException {
         Trainer trainer = trainerService.updateTrainer(trainerId, trainerX,file);
         return ResponseEntity.status(HttpStatus.OK).body(trainer);
     }

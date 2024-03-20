@@ -49,6 +49,11 @@ public class Donor implements UserDetails {
     @JsonIgnore
     private List<Payment> payments = new ArrayList<>();
 
+    // One-to-Many mapping with EmailVerificationToken
+    @OneToMany(mappedBy = "donor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<EmailVerificationToken> emailVerificationTokens;
+
 
     @Override
     @JsonIgnore

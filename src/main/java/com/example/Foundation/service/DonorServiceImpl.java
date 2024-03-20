@@ -90,7 +90,7 @@ public class DonorServiceImpl implements DonorService, UserDetailsService {
 
     @Override
     public Donor getDonorById(int donorId) throws InvalidDonorIdException {
-        return donorRepository.findById(donorId).orElseThrow(() -> new InvalidDonorIdException("Invalid donorId" + donorId));
+        return donorRepository.findById(donorId).orElseThrow(() -> new InvalidDonorIdException("Invalid donorId" + ":" + donorId));
     }
 
     @Override

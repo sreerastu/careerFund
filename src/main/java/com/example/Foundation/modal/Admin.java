@@ -21,6 +21,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -51,6 +52,11 @@ public class Admin implements UserDetails {
     private UserType userType;
 
     private String image;  // New field to store image path
+
+    // One-to-Many mapping with EmailVerificationToken
+    @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<EmailVerificationToken> emailVerificationTokens;
 
 
 

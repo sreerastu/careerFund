@@ -35,7 +35,7 @@ public class DonorController {
     }
 
     @PatchMapping("/donor/{donorId}")
-    public ResponseEntity<?> updateDonor(@PathVariable int donorId, @RequestBody Donor donorX, @RequestParam(required = false) MultipartFile file) throws InvalidDonorIdException, IOException {
+    public ResponseEntity<?> updateDonor(@PathVariable int donorId, @ModelAttribute Donor donorX, @RequestParam(required = false) MultipartFile file) throws InvalidDonorIdException, IOException {
         Donor donor = donorService.updateDonor(donorId, donorX,file);
         return ResponseEntity.status(HttpStatus.OK).body(donor);
     }
@@ -52,7 +52,7 @@ public class DonorController {
         return ResponseEntity.status(HttpStatus.OK).body(donor);
     }
 
-    @DeleteMapping("/Donor/{DonorId}")
+    @DeleteMapping("/donor/{DonorId}")
     public ResponseEntity<?> deleteDonorById(@PathVariable int DonorId) throws DonorNotFoundException {
         donorService.deleteDonorById(DonorId);
         return ResponseEntity.status(HttpStatus.OK).build();

@@ -19,6 +19,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -62,6 +63,11 @@ public class Student implements UserDetails {
     @OneToOne(mappedBy = "student", cascade = CascadeType.ALL)
     @JsonBackReference
     private SuccessStories successStories;
+
+    // One-to-Many mapping with EmailVerificationToken
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<EmailVerificationToken> emailVerificationTokens;
 
     @Override
     @JsonIgnore

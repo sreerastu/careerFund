@@ -5,6 +5,7 @@ import com.example.Foundation.dto.LoginApiDto;
 import com.example.Foundation.exception.AuthenticationException;
 import com.example.Foundation.service.*;
 import com.example.Foundation.util.JWTUtility;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,6 +21,8 @@ public class AuthenticationController {
     private AuthenticationManager authenticationManager;
     private EmailService emailService;
 
+    @Autowired
+    private TokenBlacklistService tokenBlacklistService;
 
     public AuthenticationController(JWTUtility jwtUtil, AuthenticationManager authenticationManager, EmailService emailService, StudentServiceImpl studentService, AdminServiceImpl adminService, TrainerServiceImpl trainerService, DonorServiceImpl donorService) {
         this.jwtUtil = jwtUtil;
@@ -30,6 +33,7 @@ public class AuthenticationController {
 
     @PostMapping("/authenticate")
     public ResponseEntity<?> authenticate(@RequestBody LoginApiDto loginCredentials) throws AuthenticationException {
+
         try {
             // Authenticate the user using Spring Security's authentication manager
             authenticationManager.authenticate(
@@ -45,23 +49,38 @@ public class AuthenticationController {
         }
     }
 
+    @PostMapping("/verification/{emailAddress}")
+    public ResponseEntity<?> verification(@PathVariable String emailAddress) throws Exception {
 
-    @PostMapping("/reset/{emailAddress}")
-    public ResponseEntity<?> resetPassword(@PathVariable String emailAddress) throws Exception {
-
-        emailService.sendEmail(emailAddress);
+        emailService.verifyEmail(emailAddress);
 
         return ResponseEntity.status(HttpStatus.OK).body("Mail Sent Successfully......!");
 
     }
 
-    @PostMapping("/verification/{emailAddress}/{code}")
-    public ResponseEntity<?> verification(@PathVariable String emailAddress, @PathVariable String code) throws Exception {
+    @PostMapping("/resetPassword/{emailAddress}")
+    public ResponseEntity<?> resetPassword(@PathVariable String emailAddress, @RequestParam String code, @RequestParam String newPassword, @RequestParam String confirmPassword) throws Exception {
 
-        emailService.verifyEmail(emailAddress, code);
+        String response = emailService.resetPassword(emailAddress, code, newPassword, confirmPassword);
 
-        return ResponseEntity.status(HttpStatus.OK).body("Mail Sent Successfully......!");
+        return ResponseEntity.status(HttpStatus.OK).body(response);
 
+    }
+    @PostMapping("/logout")
+    public ResponseEntity<String> addToBlacklist(@RequestHeader("Authorization") String token) {
+        tokenBlacklistService.addToBlacklist(token.substring(7)); // Remove "Bearer " prefix
+        return ResponseEntity.ok("log out successfully");
+    }
+
+
+    @PostMapping("/verify/authenticate")
+    public ResponseEntity<?> authenticate(@RequestHeader("Authorization") String token) {
+        // Check if the token is blacklisted
+        if (tokenBlacklistService.isBlacklisted(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token is blacklisted");
+        }
+        // Token is valid, continue processing
+        return ResponseEntity.ok().build();
     }
 
 

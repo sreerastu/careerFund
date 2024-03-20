@@ -15,7 +15,6 @@ import java.util.regex.Pattern;
 public class Masking extends GenericFilter {
 
 
-    //@Value("name,email")
     private String strTypeMaskableFields = "emailAddress";
     private String numTypeMaskableFields = "contactNumber ";
     private String[] numTypeMaskableFieldsArr;

@@ -36,7 +36,7 @@ public class StudentController {
     }
 
     @PatchMapping("/student/{studentId}")
-    public ResponseEntity<?> updateStudent(@PathVariable int studentId, @RequestBody Student studentX, @RequestParam(required = false) MultipartFile file) throws InvalidStudentIdException, IOException {
+    public ResponseEntity<?> updateStudent(@PathVariable int studentId, @ModelAttribute Student studentX, @RequestParam(required = false) MultipartFile file) throws InvalidStudentIdException, IOException {
         Student student = studentService.updateStudent(studentId, studentX, file);
         return ResponseEntity.status(HttpStatus.OK).body(student);
     }
