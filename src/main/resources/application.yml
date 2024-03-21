@@ -8,8 +8,8 @@ jwt:
 #smtp configuration and database configuration
 spring:
   datasource:
-#    url: jdbc:postgresql://localhost:5432/careerfundDB
-    url: jdbc:postgresql://database-1.crc20wkc223a.eu-north-1.rds.amazonaws.com:5432/DemoDB
+#    url: jdbc:postgresql://localhost:5432/testDB1
+    url: jdbc:postgresql://database-1.crc20wkc223a.eu-north-1.rds.amazonaws.com:5432/DemoDB1
     username: postgres
     password: mahesh$106
 #    password: SaiKumar

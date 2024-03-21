@@ -22,9 +22,9 @@ public class AdminServiceImpl implements AdminService, UserDetailsService {
     @Autowired
     private AdminRepository adminRepository;
 
-    @Autowired
+  /*  @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
-
+*/
     @Autowired
     private S3Service s3Service; // Injecting the S3Service
 
@@ -59,8 +59,11 @@ public class AdminServiceImpl implements AdminService, UserDetailsService {
         if (admin.getEmailAddress() != null) {
             existingAdmin.setEmailAddress(admin.getEmailAddress());
         }
-        if (admin.getPassword() != null) {
+       /* if (admin.getPassword() != null) {
             existingAdmin.setPassword(this.bCryptPasswordEncoder.encode(admin.getPassword()));
+        }*/
+        if (admin.getPassword() != null) {
+            existingAdmin.setPassword(admin.getPassword());
         }
         if (admin.getContactNumber() != null) {
             existingAdmin.setContactNumber(admin.getContactNumber());

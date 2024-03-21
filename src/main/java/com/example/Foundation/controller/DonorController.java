@@ -52,9 +52,9 @@ public class DonorController {
         return ResponseEntity.status(HttpStatus.OK).body(donor);
     }
 
-    @DeleteMapping("/donor/{DonorId}")
-    public ResponseEntity<?> deleteDonorById(@PathVariable int DonorId) throws DonorNotFoundException {
-        donorService.deleteDonorById(DonorId);
-        return ResponseEntity.status(HttpStatus.OK).build();
+    @DeleteMapping("/donor/{donorId}")
+    public ResponseEntity<?> deleteDonorById(@PathVariable int donorId) throws DonorNotFoundException {
+        String response = donorService.deleteDonorById(donorId);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

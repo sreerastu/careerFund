@@ -42,7 +42,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.csrf()
                 .disable()
                 .authorizeRequests()
-                .antMatchers("/api/authenticate", "/api/verify/authenticate", "/api/register/**", "/api/donors", "/api/stories",
+                .antMatchers("/api/authenticate", "/api/verify/authenticate", "/api/register/admin", "/api/register/donor", "/api/donors", "/api/stories",
                         "/api/technologies/all", "/api/blogs/all", "/api/payments", "/api/topPayments", "/api/articles/all",
                         "/clients/all", "/api/students", "/api/trainers", "/contactus/add", "/contactus/all", "/api/admins",
                         "/api/token/all", "/api/makeDefaultPayment", "/api/verification/**", "/api/resetPassword/**", "api/token/all", "/api/logout", "/blacklist/check", "/blacklist/add")

@@ -41,6 +41,15 @@ public class Student implements UserDetails {
     protected String password;
     @Column(nullable = false,unique = true)
     protected String emailAddress;
+
+   /* @Pattern(regexp = "^[2-9][0-9]{3} [0-9]{4} [0-9]{4}$", message = "Invalid Aadhaar number format")
+    @Column(unique = true)
+    private String aadhaarNumber;
+
+    @Pattern(regexp = "^[A-Z]{5}[0-9]{4}[A-Z]{1}$", message = "Invalid PAN number format")
+    @Column(unique = true)
+    private String panNumber;*/
+
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
