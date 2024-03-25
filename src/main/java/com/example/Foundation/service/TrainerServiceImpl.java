@@ -40,7 +40,7 @@ public class TrainerServiceImpl implements TrainerService, UserDetailsService {
             String filename = file.getOriginalFilename();
             trainer.setImage(filename);
             // Upload the image to S3
-            s3Service.uploadImageToS3(folderName, filename,file);
+            s3Service.uploadImageToS3(folderName, filename, file);
         }
         return trainerRepository.save(trainer);
     }
@@ -70,11 +70,11 @@ public class TrainerServiceImpl implements TrainerService, UserDetailsService {
         if (trainer.getContactNumber() != null) {
             existingTrainer.setContactNumber(trainer.getContactNumber());
         }
-        if(trainer.getUserType() !=null){
+        if (trainer.getUserType() != null) {
             existingTrainer.setUserType(trainer.getUserType());
         }
 
-        if(trainer.getCertification() !=null){
+        if (trainer.getCertification() != null) {
             existingTrainer.setCertification(trainer.getCertification());
         }
         if (file != null && !file.isEmpty()) {
@@ -83,7 +83,7 @@ public class TrainerServiceImpl implements TrainerService, UserDetailsService {
             existingTrainer.setImage(newImageName);
 
             // Upload new image to S3
-            s3Service.uploadImageToS3(newImageName, newImageName,file);
+            s3Service.uploadImageToS3(newImageName, newImageName, file);
 
             // Delete the old image file from S3
             if (oldImageName != null) {
@@ -129,7 +129,6 @@ public class TrainerServiceImpl implements TrainerService, UserDetailsService {
     public Trainer getTrainerByEmail(String emailAddress) {
         return trainerRepository.findByEmailAddress(emailAddress);
     }
-
 
 
     public List<Trainer> getAllTopTrainers() {

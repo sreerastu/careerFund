@@ -4,6 +4,7 @@ import com.example.Foundation.exception.InvalidStudentIdException;
 import com.example.Foundation.exception.StudentNotFoundException;
 import com.example.Foundation.exception.TrainerNotFoundException;
 import com.example.Foundation.modal.Student;
+import com.example.Foundation.modal.Trainer;
 import com.example.Foundation.service.StudentServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -60,12 +61,12 @@ public class StudentController {
     }
 
     @PostMapping("/student/{studentId}/assignStudent/{trainerId}")
-    public ResponseEntity<String> assignStudentToTrainer(
+    public ResponseEntity<?> assignStudentToTrainer(
             @PathVariable int trainerId,
             @PathVariable int studentId
     ) throws TrainerNotFoundException {
-        studentService.assignStudentToTrainer(trainerId, studentId);
-        return ResponseEntity.ok("Student assigned to trainer successfully");
+        Trainer trainer = studentService.assignStudentToTrainer(trainerId, studentId);
+        return ResponseEntity.status(HttpStatus.OK).body(trainer);
     }
 
     @DeleteMapping("/trainer/{trainerId}/unAssignStudent/{studentId}")
@@ -78,7 +79,7 @@ public class StudentController {
     }
 
     @GetMapping("/placedStudents")
-    public ResponseEntity<?> getPlacedStudents(){
+    public ResponseEntity<?> getPlacedStudents() {
         List<Student> allPlacedStudents = studentService.getAllPlacedStudents();
         return ResponseEntity.status(HttpStatus.OK).body(allPlacedStudents);
     }

@@ -35,9 +35,12 @@ public class AuthenticationController {
     public ResponseEntity<?> authenticate(@RequestBody LoginApiDto loginCredentials) throws AuthenticationException {
 
         try {
+            // Convert email address to lowercase
+            String lowercaseEmail = loginCredentials.getEmailAddress().toLowerCase();
+
             // Authenticate the user using Spring Security's authentication manager
             authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginCredentials.getEmailAddress(), loginCredentials.getPassword())
+                    new UsernamePasswordAuthenticationToken(lowercaseEmail, loginCredentials.getPassword())
             );
 
             String token = jwtUtil.generateToken(loginCredentials.getEmailAddress());
@@ -48,6 +51,7 @@ public class AuthenticationController {
             throw new AuthenticationException("Invalid Credentials");
         }
     }
+
 
     @PostMapping("/verification/{emailAddress}")
     public ResponseEntity<?> verification(@PathVariable String emailAddress) throws Exception {

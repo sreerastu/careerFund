@@ -66,8 +66,10 @@ public class Student implements UserDetails {
     private UserType userType;
 
 
-    @OneToMany(mappedBy = "student")
-    private Set<Trainer> trainers = new HashSet<>();
+    @ManyToOne
+    @JoinColumn(name = "trainer_id")
+    @JsonBackReference
+    private Trainer trainer;
 
     @OneToOne(mappedBy = "student", cascade = CascadeType.ALL)
     @JsonBackReference

@@ -4,6 +4,7 @@ import com.example.Foundation.Enum.Course;
 import com.example.Foundation.Enum.Gender;
 import com.example.Foundation.Enum.UserType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,10 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Data
 @AllArgsConstructor
@@ -51,9 +49,9 @@ public class Trainer implements UserDetails {
     private String image;
 
 
-    @ManyToOne
-    @JoinColumn(name = "student_id")
-    private Student student;
+    @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<Student> students = new ArrayList<>();
 
 
     // One-to-Many mapping with EmailVerificationToken

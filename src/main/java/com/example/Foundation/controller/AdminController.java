@@ -26,13 +26,13 @@ public class AdminController {
     @Autowired
     private AdminServiceImpl adminService;
 
-    /*@Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;*/
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
     @PostMapping("/register/admin")
     public ResponseEntity<?> createAdmin(@Valid @ModelAttribute Admin admin, @RequestParam(required = false) MultipartFile file) throws IOException {
-//        admin.setPassword(this.bCryptPasswordEncoder.encode(admin.getPassword()));
+        admin.setPassword(this.bCryptPasswordEncoder.encode(admin.getPassword()));
         Admin createdAdmin = adminService.createAdmin(admin, file);
         log.info("admin created" + ":" + createdAdmin);
         return ResponseEntity.status(HttpStatus.OK).body(createdAdmin);

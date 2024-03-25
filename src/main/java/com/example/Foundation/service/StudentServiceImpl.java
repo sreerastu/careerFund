@@ -12,6 +12,8 @@ import com.example.Foundation.repositories.TrainerRepository;
 import com.example.Foundation.util.JWTUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -137,23 +140,40 @@ public class StudentServiceImpl implements StudentService, UserDetailsService {
         return studentRepository.findByEmailAddress(emailAddress);
     }
 
-    public void assignStudentToTrainer(int trainerId, int studentId) throws TrainerNotFoundException {
-        Trainer trainer = trainerRepository.findById(trainerId).orElseThrow(() -> new TrainerNotFoundException("trainer not found with Id" + ":" + trainerId));
-        Student student = studentRepository.findById(studentId).orElseThrow(() -> new TrainerNotFoundException("student not found with Id" + ":" + studentId));
+    public Trainer assignStudentToTrainer(int trainerId, int studentId) throws TrainerNotFoundException {
+        Trainer trainer = trainerRepository.findById(trainerId)
+                .orElseThrow(() -> new TrainerNotFoundException("Trainer not found with ID: " + trainerId));
 
-        if (trainer != null && student != null) {
-            trainer.setStudent(student);
-            trainerRepository.save(trainer);
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new TrainerNotFoundException("Student not found with ID: " + studentId));
+
+        // Check if the student is already assigned to this trainer
+        if (trainer.getStudents().contains(student)) {
+            // If the student is already assigned, return with a message
+            // You can modify the response format as per your requirement
+            throw new RuntimeException("student already assigned!.. ");
         }
+
+        // If the student is not already assigned, proceed with the assignment
+        student.setTrainer(trainer); // Set the trainer for the student
+        trainer.getStudents().add(student); // Add student to the set of students
+        trainerRepository.save(trainer);
+        return trainer;
     }
+
+
 
     public void unAssignStudentFromTrainer(int trainerId, int studentId) {
         Trainer trainer = trainerRepository.findById(trainerId).orElse(null);
         Student student = studentRepository.findById(studentId).orElse(null);
 
         if (trainer != null && student != null) {
-            // Set the trainer reference to null to unAssign
-            trainer.setStudent(null);
+            // Remove the student from the set of students associated with the trainer
+            trainer.getStudents().remove(student);
+            trainerRepository.save(trainer);
+
+            // Update the trainer field in the student entity to null
+            student.setTrainer(null);
             studentRepository.save(student);
         }
     }

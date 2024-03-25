@@ -1,6 +1,7 @@
 package com.example.Foundation.controller;
 
 import com.example.Foundation.exception.TrainerNotFoundException;
+import com.example.Foundation.modal.Student;
 import com.example.Foundation.modal.Trainer;
 import com.example.Foundation.service.TrainerServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("api")
@@ -57,6 +59,13 @@ public class TrainerController {
     public ResponseEntity<?> deleteTrainerById(@PathVariable int trainerId) throws TrainerNotFoundException {
         trainerService.deleteTrainerById(trainerId);
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @GetMapping("/trainer/{trainerId}/students")
+    public ResponseEntity<?> getTrainerWithStudents(@PathVariable int trainerId) throws TrainerNotFoundException {
+        Trainer trainer = trainerService.getTrainerById(trainerId);
+        List<Student> students = trainer.getStudents();
+        return ResponseEntity.status(HttpStatus.OK).body(trainer);
     }
 
 
