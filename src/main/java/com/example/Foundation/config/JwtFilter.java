@@ -34,6 +34,8 @@ public class JwtFilter extends OncePerRequestFilter {
         if (null != authorization && authorization.startsWith("Bearer ")) {
             token = authorization.substring(7);
             userName = jwtUtility.getUsernameFromToken(token);
+            // Convert username to lowercase
+            userName = userName.toLowerCase();
         }
 
         if (null != userName && SecurityContextHolder.getContext().getAuthentication() == null) {

@@ -57,7 +57,9 @@ public class JWTUtility implements Serializable {
     //generate token for user
     public String generateToken(String emailAddress) {
         Map<String, Object> claims = new HashMap<>();
-        return createToken(claims, emailAddress);
+        // Convert email address to lowercase
+        String lowercaseEmail = emailAddress.toLowerCase();
+        return createToken(claims, lowercaseEmail);
     }
 
 

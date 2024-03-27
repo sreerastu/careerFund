@@ -30,7 +30,7 @@ public class SuccessStoryServiceImpl {
     public SuccessStories createSuccessStory(SuccessStories successStories, int studentId, MultipartFile file) throws InvalidStudentIdException, IOException {
 
         Student student = studentService.getStudentById(studentId);
-        if (student != null && student.getPlaced() != null && file != null && !file.isEmpty()) {
+        if (!student.getPlaced() && file != null && !file.isEmpty()) {
             successStories.setStudent(student);
             String fileName = file.getOriginalFilename();
             successStories.setImage(fileName);
