@@ -1,6 +1,7 @@
 package com.example.Foundation.util;
 
 
+import com.example.Foundation.Enum.UserType;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -55,10 +56,11 @@ public class JWTUtility implements Serializable {
 
 
     //generate token for user
-    public String generateToken(String emailAddress) {
+    public String generateToken(String emailAddress, UserType userType) {
         Map<String, Object> claims = new HashMap<>();
         // Convert email address to lowercase
         String lowercaseEmail = emailAddress.toLowerCase();
+        claims.put("userType",userType);
         return createToken(claims, lowercaseEmail);
     }
 

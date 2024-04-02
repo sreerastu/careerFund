@@ -1,8 +1,5 @@
 package com.example.Foundation.modal;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,6 +21,9 @@ public class Payment {
     private int paymentId;
     private Double amount;
     private LocalDateTime timestamp;
+
+    private String bankRRN;
+    private String paymentMethod;
 
     @Column(name = "receipt_id")
     private String receiptId;

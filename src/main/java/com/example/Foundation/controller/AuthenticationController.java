@@ -1,5 +1,6 @@
 package com.example.Foundation.controller;
 
+import com.example.Foundation.Enum.UserType;
 import com.example.Foundation.dto.JwtResponse;
 import com.example.Foundation.dto.LoginApiDto;
 import com.example.Foundation.exception.AuthenticationException;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,6 +25,9 @@ public class AuthenticationController {
 
     @Autowired
     private TokenBlacklistService tokenBlacklistService;
+
+    @Autowired
+    private CustomUserDetails customUserDetails;
 
     public AuthenticationController(JWTUtility jwtUtil, AuthenticationManager authenticationManager, EmailService emailService, StudentServiceImpl studentService, AdminServiceImpl adminService, TrainerServiceImpl trainerService, DonorServiceImpl donorService) {
         this.jwtUtil = jwtUtil;
@@ -43,7 +48,13 @@ public class AuthenticationController {
                     new UsernamePasswordAuthenticationToken(lowercaseEmail, loginCredentials.getPassword())
             );
 
-            String token = jwtUtil.generateToken(loginCredentials.getEmailAddress());
+            // Load UserDetails object
+            UserDetails userDetails = customUserDetails.loadUserByUsername(lowercaseEmail);
+
+            // Determine the userType based on UserDetails
+            UserType userType = customUserDetails.determineUserType(userDetails);
+
+            String token = jwtUtil.generateToken(loginCredentials.getEmailAddress(),userType);
 
             return ResponseEntity.ok(new JwtResponse(token));
         } catch (BadCredentialsException ex) {

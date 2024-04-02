@@ -1,5 +1,6 @@
 package com.example.Foundation.service;
 
+import com.example.Foundation.Enum.UserType;
 import com.example.Foundation.modal.Admin;
 import com.example.Foundation.modal.Donor;
 import com.example.Foundation.modal.Student;
@@ -50,4 +51,23 @@ public class CustomUserDetails implements UserDetailsService {
         }
 
     }
+
+
+
+
+    // Method to determine the userType based on the UserDetails object
+    public UserType determineUserType(UserDetails userDetails) {
+        if (userDetails instanceof Admin) {
+            return UserType.ADMIN;
+        } else if (userDetails instanceof Donor) {
+            return UserType.DONOR;
+        } else if (userDetails instanceof Student) {
+            return UserType.STUDENT;
+        } else if (userDetails instanceof Trainer) {
+            return UserType.TRAINER;
+        } else {
+            throw new UsernameNotFoundException("userType is not defined");
+        }
+    }
+
 }
